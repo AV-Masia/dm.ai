@@ -1,0 +1,60 @@
+name: Deploy Landing Page to GitHub Pages
+
+on:
+  push:
+    branches:
+      - landing
+    paths:
+      - 'landing/**'
+      - '.github/workflows/deploy-landing.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build landing page
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inject Google Analytics measurement ID
+        run: |
+          GA_ID="${{ vars.GA_MEASUREMENT_ID }}"
+          if [ -n "$GA_ID" ]; then
+            sed -i "s/__GA_MEASUREMENT_ID__/${GA_ID}/g" landing/index.html
+            echo "✅ Google Analytics injected: ${GA_ID}"
+          else
+            # Remove GA tags when no ID is configured — keep the page clean
+            sed -i '/__GA_MEASUREMENT_ID__/d' landing/index.html
+            echo "ℹ️  GA_MEASUREMENT_ID not set — analytics script removed"
+          fi
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: landing
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMTools — Enterprise AI-Factory Orchestrator | EPAM Open Source</title>
+  <meta name="description" content="DMTools is an enterprise AI-factory orchestrator for automating delivery workflows across trackers, source control, documentation, design systems, AI providers, and CI/CD. 320+ CLI tools. 20+ integrations.">
+  <meta name="keywords" content="DMTools, EPAM, AI orchestrator, CLI tools, Jira, GitHub, Azure DevOps, Figma, Confluence, MCP, AI automation, enterprise">
+  <link rel="canonical" href="https://epam.github.io/dm.ai/">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="DMTools — Enterprise AI-Factory Orchestrator">
+  <meta property="og:description" content="320+ CLI tools. 20+ integrations. One orchestration layer for your AI factory.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://epam.github.io/dm.ai/">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DMTools — Enterprise AI-Factory Orchestrator">
+  <meta name="twitter:description" content="320+ CLI tools. 20+ integrations. One orchestration layer for your AI factory.">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=__GA_MEASUREMENT_ID__"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '__GA_MEASUREMENT_ID__');
+  </script>
+
+  <!-- Fonts: Nunito (closest free substitute to Museo Sans) + Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@100;200;300;400;500;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== EPAM Brandbook 2023 — Night Mode ===== */
+    :root {
+      --canvas:   #060606;
+      --surface:  #161616;
+      --hairline: #2a2a2a;
+      --text:     #FFFFFF;
+      --muted:    rgba(255,255,255,0.52);
+      --sea:      #00F6FF;
+      --mint:     #00FFF0;
+      --lilac:    #B896FF;
+      --sky:      #7BA8FF;
+      --grad:     linear-gradient(90deg, #00FFF0 0%, #00F6FF 50%, #B896FF 100%);
+      --font:     'Nunito', 'Segoe UI', system-ui, sans-serif;
+      --mono:     'Fira Code', 'Cascadia Code', Consolas, monospace;
+      --radius:   12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--canvas);
+      color: var(--text);
+      font-family: var(--font);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== Typography ===== */
+    .label {
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .label-accent { color: var(--sea); }
+
+    .gradient-text {
+      background: var(--grad);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ===== Layout ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    section { padding: 7rem 0; position: relative; }
+
+    /* ===== Glow blur — signature EPAM effect ===== */
+    .glow {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .glow-cyan  { background: var(--sea);   width: 640px; height: 640px; opacity: 0.28; }
+    .glow-lilac { background: var(--lilac); width: 520px; height: 520px; opacity: 0.20; }
+
+    /* ===== NAV ===== */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      background: rgba(6,6,6,0.82);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .epam-badge {
+      background: #fff;
+      color: #060606;
+      font-weight: 900;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      padding: 0.22rem 0.55rem;
+      border-radius: 2px;
+      font-family: var(--font);
+    }
+
+    .brand-name {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+    }
+
+    .nav-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--text); }
+
+    .nav-cta {
+      background: transparent;
+      border: 1px solid var(--sea);
+      color: var(--sea);
+      padding: 0.5rem 1.3rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-family: var(--font);
+    }
+    .nav-cta:hover { background: var(--sea); color: var(--canvas); }
+
+    /* ===== HERO ===== */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding-top: 5rem;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+    }
+
+    .hero-content h1 {
+      font-size: clamp(3rem, 6.5vw, 5.8rem);
+      font-weight: 100;
+      line-height: 1.08;
+      margin-bottom: 1.75rem;
+      letter-spacing: -0.025em;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 580px;
+      margin-bottom: 2.75rem;
+      line-height: 1.75;
+    }
+
+    /* Install block */
+    .install-wrap {
+      display: inline-flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+      overflow: hidden;
+      max-width: 100%;
+      margin-bottom: 3rem;
+    }
+
+    .os-tabs {
+      display: flex;
+      border-right: 1px solid var(--hairline);
+      flex-shrink: 0;
+    }
+
+    .os-tab {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.9rem 1rem;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: color 0.2s;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+    }
+    .os-tab.active { color: var(--sea); border-bottom-color: var(--sea); }
+
+    .install-cmd {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--mint);
+      padding: 0 1.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 440px;
+      flex: 1;
+    }
+
+    .copy-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+      border-left: 1px solid var(--hairline);
+      flex-shrink: 0;
+    }
+    .copy-btn:hover { color: var(--text); }
+
+    /* CTA buttons */
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn-primary {
+      background: var(--sea);
+      color: var(--canvas);
+      padding: 0.875rem 2rem;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+      font-family: var(--font);
+    }
+    .btn-primary:hover { background: var(--mint); transform: translateY(-1px); }
+
+    .btn-outline {
+      color: var(--text);
+      padding: 0.875rem 2rem;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      text-decoration: none;
+      border: 1px solid var(--hairline);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--muted); }
+
+    /* Stats row */
+    .hero-stats {
+      display: flex;
+      gap: 3.5rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--hairline);
+      flex-wrap: wrap;
+    }
+
+    .stat-val {
+      font-size: 2.6rem;
+      font-weight: 100;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-lbl {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* ===== PROBLEM ===== */
+    #problem { background: var(--canvas); }
+
+    .section-title {
+      font-size: clamp(2rem, 4.2vw, 3.4rem);
+      font-weight: 100;
+      line-height: 1.12;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 560px;
+      line-height: 1.75;
+      margin-bottom: 3.5rem;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--hairline);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .tool-card {
+      background: var(--surface);
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: rgba(255,80,80,0.0);
+      transition: background 0.4s;
+    }
+
+    .tool-icon {
+      width: 42px; height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .tool-name { font-size: 0.95rem; font-weight: 500; }
+    .tool-status { font-size: 0.75rem; color: rgba(255,100,100,0.7); }
+
+    .problem-quote {
+      margin-top: 3.5rem;
+      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 700px;
+      line-height: 1.65;
+    }
+    .problem-quote strong { color: var(--text); font-weight: 500; }
+
+    /* ===== SOLUTION ===== */
+    #solution { background: var(--surface); }
+
+    .hub-center {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 3rem;
+    }
+
+    .hub-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 1rem 2.5rem;
+      border: 1px solid rgba(0,246,255,0.35);
+      border-radius: 100px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background: linear-gradient(135deg, rgba(0,246,255,0.08), rgba(184,150,255,0.08));
+      box-shadow: 0 0 40px rgba(0,246,255,0.12);
+      margin-bottom: 1rem;
+    }
+
+    .hub-desc { font-size: 0.85rem; color: var(--muted); }
+
+    .chips-group { margin-bottom: 2.5rem; }
+    .chips-group-title {
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.625rem;
+    }
+
+    .chip {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: 100px;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .chip:hover { border-color: var(--sea); color: var(--sea); }
+
+    .chip-cnt {
+      font-size: 0.68rem;
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .chip-ai {
+      border-color: rgba(184,150,255,0.3);
+      color: var(--lilac);
+    }
+    .chip-ai:hover {
+      border-color: var(--lilac);
+      background: rgba(184,150,255,0.06);
+      color: var(--lilac);
+    }
+
+    /* ===== NUMBERS ===== */
+    #numbers { background: var(--canvas); }
+
+    .numbers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+
+    .num-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+    }
+
+    .num-big {
+      font-size: 4.2rem;
+      font-weight: 100;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .num-lbl {
+      font-size: 0.95rem;
+      font-weight: 300;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .bars { display: flex; flex-direction: column; gap: 0.65rem; }
+
+    .bar-row { display: flex; align-items: center; gap: 0.75rem; }
+
+    .bar-name {
+      font-size: 0.78rem;
+      width: 90px;
+      flex-shrink: 0;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      flex: 1;
+      height: 3px;
+      background: var(--hairline);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--grad);
+      border-radius: 3px;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 1.1s cubic-bezier(0.16,1,0.3,1) 0.2s;
+    }
+
+    .bar-val {
+      font-size: 0.78rem;
+      color: var(--muted);
+      width: 22px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .int-list-section { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .int-group-title {
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .int-names {
+      font-size: 0.88rem;
+      line-height: 1.9;
+      color: var(--text);
+    }
+
+    /* ===== ARCHITECTURE ===== */
+    #architecture { background: var(--surface); overflow: hidden; }
+
+    .arch-steps {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: var(--hairline);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 960px) { .arch-steps { grid-template-columns: repeat(3,1fr); } }
+    @media (max-width: 600px) { .arch-steps { grid-template-columns: 1fr 1fr; } }
+
+    .arch-step {
+      background: var(--canvas);
+      padding: 1.75rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .arch-num {
+      font-size: 0.62rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      color: var(--sea);
+    }
+
+    .arch-title { font-size: 0.88rem; font-weight: 600; line-height: 1.35; }
+    .arch-desc  { font-size: 0.76rem; color: var(--muted); line-height: 1.55; }
+
+    .arch-note {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: rgba(0,246,255,0.04);
+      border: 1px solid rgba(0,246,255,0.14);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .arch-note strong { color: var(--sea); }
+
+    /* ===== CODE ===== */
+    #code { background: var(--canvas); }
+
+    .code-block {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .dots { display: flex; gap: 6px; }
+    .dot  { width: 12px; height: 12px; border-radius: 50%; background: var(--hairline); }
+
+    .code-fname {
+      margin-left: 0.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: var(--mono);
+    }
+
+    .code-body {
+      padding: 2rem;
+      overflow-x: auto;
+    }
+
+    pre {
+      font-family: var(--mono);
+      font-size: 0.86rem;
+      line-height: 1.75;
+    }
+
+    .ck  { color: var(--lilac); }   /* keyword */
+    .cf  { color: var(--sky); }     /* function */
+    .cs  { color: var(--mint); }    /* string */
+    .cc  { color: rgba(255,255,255,0.3); font-style: italic; } /* comment */
+    .cn  { color: var(--sea); }     /* number/var */
+
+    /* ===== PATHS ===== */
+    #paths { background: var(--surface); }
+
+    .paths-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .path-card {
+      background: var(--canvas);
+      border: 1px solid var(--hairline);
+      border-radius: var(--radius);
+      padding: 2rem 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .path-card:hover { border-color: var(--sea); transform: translateY(-3px); }
+
+    .path-icon { font-size: 1.75rem; }
+    .path-title { font-size: 1.05rem; font-weight: 700; }
+    .path-desc  { font-size: 0.88rem; color: var(--muted); line-height: 1.65; flex: 1; }
+
+    .path-link {
+      font-size: 0.83rem;
+      color: var(--sea);
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: color 0.2s;
+    }
+    .path-link:hover { color: var(--mint); }
+
+    /* ===== CTA ===== */
+    #cta { background: var(--canvas); overflow: hidden; }
+
+    #cta h2 {
+      font-size: clamp(2.5rem, 5.5vw, 4.8rem);
+      font-weight: 100;
+      line-height: 1.08;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-row {
+      display: flex;
+      border-bottom: 1px solid var(--hairline);
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.8rem 1.25rem;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: color 0.2s;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+    .tab-btn.active { color: var(--sea); border-bottom-color: var(--sea); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .cmd-box {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .cmd-box code {
+      font-family: var(--mono);
+      font-size: 0.88rem;
+      color: var(--mint);
+      word-break: break-all;
+    }
+
+    .cta-btns {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 3rem;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--hairline);
+      padding: 4rem 0 2.5rem;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.8fr 1fr 1fr 1fr;
+      gap: 3rem;
+    }
+
+    @media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .footer-grid { grid-template-columns: 1fr; } }
+
+    .footer-brand-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
+    .footer-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; max-width: 280px; }
+
+    .footer-col-title {
+      font-size: 0.68rem;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links { display: flex; flex-direction: column; gap: 0.65rem; }
+
+    .footer-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: var(--text); }
+
+    .footer-bottom {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-copy { font-size: 0.8rem; color: var(--muted); }
+
+    .license-tag {
+      background: var(--hairline);
+      border-radius: 4px;
+      padding: 0.2rem 0.65rem;
+      font-size: 0.73rem;
+      color: var(--muted);
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up { animation: fadeUp 0.75s ease both; }
+    .d1 { animation-delay: 0.05s; }
+    .d2 { animation-delay: 0.18s; }
+    .d3 { animation-delay: 0.32s; }
+    .d4 { animation-delay: 0.46s; }
+    .d5 { animation-delay: 0.60s; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: var(--sea);
+      color: var(--canvas);
+      padding: 0.6rem 1.5rem;
+      border-radius: 100px;
+      font-size: 0.83rem;
+      font-weight: 700;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 9999;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero-stats { gap: 2rem; }
+      .install-cmd { max-width: 200px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ======== NAV ======== -->
+<nav>
+  <div class="nav-inner">
+    <a class="nav-brand" href="#">
+      <span class="epam-badge">EPAM</span>
+      <span class="brand-name gradient-text">DMTools</span>
+    </a>
+    <div class="nav-links">
+      <a href="#solution"      class="nav-link">Integrations</a>
+      <a href="#architecture"  class="nav-link">Architecture</a>
+      <a href="#paths"         class="nav-link">Usage</a>
+      <a href="https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs" class="nav-link" target="_blank" rel="noopener">Docs</a>
+      <a href="https://github.com/epam/dm.ai" class="nav-cta" target="_blank" rel="noopener">★ GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ======== HERO ======== -->
+<section id="hero">
+  <div class="glow glow-cyan"  style="top:-220px;left:-180px"></div>
+  <div class="glow glow-lilac" style="bottom:-120px;right:-160px"></div>
+  <div class="container">
+    <div class="hero-content">
+      <p class="label fade-up d1">EPAM Open Source &nbsp;·&nbsp; Apache 2.0 &nbsp;·&nbsp; Java 17+</p>
+
+      <h1 class="fade-up d2">
+        Enterprise<br>
+        <span class="gradient-text">AI-factory</span><br>
+        orchestrator.
+      </h1>
+
+      <p class="hero-sub fade-up d3">
+        DMTools connects your trackers, source control, docs, design systems, AI providers,
+        and CI/CD into one orchestration layer. Any agent you run can reach every system
+        in your company.
+      </p>
+
+      <div class="hero-actions fade-up d4">
+        <a href="https://github.com/epam/dm.ai" class="btn-primary" target="_blank" rel="noopener">
+          ★ &nbsp;Star on GitHub
+        </a>
+        <a href="#cta" class="btn-outline">Install now</a>
+      </div>
+
+      <div class="install-wrap fade-up d5">
+        <div class="os-tabs">
+          <button class="os-tab active" onclick="setOS('unix',this)">Linux / macOS</button>
+          <button class="os-tab"        onclick="setOS('win', this)">Windows</button>
+        </div>
+        <span class="install-cmd" id="hero-cmd">curl -fsSL https://github.com/epam/dm.ai/releases/latest/download/install.sh | bash</span>
+        <button class="copy-btn" onclick="copy('hero-cmd')" title="Copy">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="hero-stats fade-up d5">
+        <div>
+          <div class="stat-val gradient-text"><span class="ctr" data-to="320">0</span>+</div>
+          <div class="stat-lbl">CLI tools</div>
+        </div>
+        <div>
+          <div class="stat-val gradient-text"><span class="ctr" data-to="20">0</span>+</div>
+          <div class="stat-lbl">Integrations</div>
+        </div>
+        <div>
+          <div class="stat-val gradient-text">4</div>
+          <div class="stat-lbl">Usage paths</div>
+        </div>
+        <div>
+          <div class="stat-val gradient-text">0</div>
+          <div class="stat-lbl">Servers to maintain</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== PROBLEM ======== -->
+<section id="problem">
+  <div class="container">
+    <p class="label label-accent reveal">The Problem</p>
+    <h2 class="section-title reveal">Delivery runs<br>on duct tape.</h2>
+    <p class="section-sub reveal">
+      You already have AI — Copilots in every team, models in every IDE.
+      But delivery still runs on handoffs and scripts nobody owns.
+      The tools don't talk to each other.
+    </p>
+
+    <div class="problem-grid reveal">
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(255,200,60,0.1)">🎯</div>
+        <div class="tool-name">Issue Tracker</div>
+        <div class="tool-status">isolated</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(80,180,255,0.1)">🔀</div>
+        <div class="tool-name">Source Control</div>
+        <div class="tool-status">isolated</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(255,120,80,0.1)">📄</div>
+        <div class="tool-name">Documentation</div>
+        <div class="tool-status">isolated</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(120,80,255,0.1)">🎨</div>
+        <div class="tool-name">Design System</div>
+        <div class="tool-status">isolated</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(60,200,120,0.1)">🤖</div>
+        <div class="tool-name">AI Provider</div>
+        <div class="tool-status">isolated</div>
+      </div>
+      <div class="tool-card">
+        <div class="tool-icon" style="background:rgba(200,100,60,0.1)">⚙️</div>
+        <div class="tool-name">CI / CD</div>
+        <div class="tool-status">isolated</div>
+      </div>
+    </div>
+
+    <p class="problem-quote reveal">
+      One-off scripts don't scale.
+      <strong>What you need is an orchestration layer</strong> — one that speaks
+      every system's language and lets agents move work forward automatically.
+    </p>
+  </div>
+</section>
+
+<!-- ======== SOLUTION ======== -->
+<section id="solution">
+  <div class="glow glow-cyan" style="top:50%;left:50%;transform:translate(-50%,-50%);opacity:0.1"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <p class="label label-accent reveal">The Solution</p>
+    <h2 class="section-title reveal">One <span class="gradient-text">orchestration</span><br>layer.</h2>
+    <p class="section-sub reveal">
+      DMTools sits between your tools and your agents.
+      One CLI — and Claude Code, Copilot, Codex, or any MCP-compatible agent
+      can reach every system in the company.
+    </p>
+
+    <div class="hub-center reveal">
+      <div class="hub-pill">
+        <span class="gradient-text">DMTools</span>
+      </div>
+      <p class="hub-desc">One CLI &nbsp;·&nbsp; MCP-compatible &nbsp;·&nbsp; JavaScript job runner &nbsp;·&nbsp; Zero persistent infrastructure</p>
+    </div>
+
+    <div class="chips-group reveal">
+      <p class="chips-group-title">Delivery integrations</p>
+      <div class="chips">
+        <span class="chip">Jira              <span class="chip-cnt">69 tools</span></span>
+        <span class="chip">Azure DevOps      <span class="chip-cnt">38 tools</span></span>
+        <span class="chip">GitHub            <span class="chip-cnt">35 tools</span></span>
+        <span class="chip">GitLab            <span class="chip-cnt">30 tools</span></span>
+        <span class="chip">Microsoft Teams   <span class="chip-cnt">31 tools</span></span>
+        <span class="chip">Bitrise           <span class="chip-cnt">23 tools</span></span>
+        <span class="chip">Figma             <span class="chip-cnt">22 tools</span></span>
+        <span class="chip">Confluence        <span class="chip-cnt">19 tools</span></span>
+        <span class="chip">TestRail          <span class="chip-cnt">17 tools</span></span>
+        <span class="chip">Jenkins           <span class="chip-cnt">5 tools</span></span>
+        <span class="chip">SharePoint</span>
+        <span class="chip">Bitbucket</span>
+      </div>
+    </div>
+
+    <div class="chips-group reveal">
+      <p class="chips-group-title">AI providers</p>
+      <div class="chips">
+        <span class="chip chip-ai">Claude / Anthropic</span>
+        <span class="chip chip-ai">GitHub Copilot</span>
+        <span class="chip chip-ai">OpenAI / Codex</span>
+        <span class="chip chip-ai">Gemini</span>
+        <span class="chip chip-ai">AWS Bedrock</span>
+        <span class="chip chip-ai">Ollama</span>
+        <span class="chip chip-ai">DIAL</span>
+        <span class="chip chip-ai">Vertex AI</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== NUMBERS ======== -->
+<section id="numbers">
+  <div class="container">
+    <p class="label label-accent reveal">By the Numbers</p>
+    <h2 class="section-title reveal">
+      <span class="gradient-text">320+</span> tools.<br>
+      20+ integrations.<br>
+      Wired. Documented. Ready.
+    </h2>
+
+    <div class="numbers-grid">
+      <!-- Bar chart card -->
+      <div class="num-card reveal">
+        <div class="num-big gradient-text"><span class="ctr" data-to="320">0</span>+</div>
+        <div class="num-lbl">CLI tools — callable as plain JS functions</div>
+        <div class="bars">
+          <div class="bar-row">
+            <span class="bar-name">Jira</span>
+            <div class="bar-track"><div class="bar-fill" style="--w:1.0"></div></div>
+            <span class="bar-val">69</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-name">Azure DevOps</span>
+            <div class="bar-track"><div class="bar-fill" style="--w:0.55"></div></div>
+            <span class="bar-val">38</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-name">GitHub</span>
+            <div class="bar-track"><div class="bar-fill" style="--w:0.51"></div></div>
+            <span class="bar-val">35</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-name">GitLab</span>
+            <div class="bar-track"><div class="bar-fill" style="--w:0.43"></div></div>
+            <span class="bar-val">30</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-name">Teams</span>
+            <div class="bar-track"><div class="bar-fill" style="--w:0.45"></div></div>
+            <span class="bar-val">31</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-name">Bitrise</span>
+            <div class="bar-track"><div class="bar-fill" style="--w:0.33"></div></div>
+            <span class="bar-val">23</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-name">Figma</span>
+            <div class="bar-track"><div class="bar-fill" style="--w:0.32"></div></div>
+            <span class="bar-val">22</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-name">Jenkins</span>
+            <div class="bar-track"><div class="bar-fill" style="--w:0.07"></div></div>
+            <span class="bar-val">5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Integrations list card -->
+      <div class="num-card reveal">
+        <div class="num-big gradient-text"><span class="ctr" data-to="20">0</span>+</div>
+        <div class="num-lbl">System integrations — all production-ready</div>
+        <div class="int-list-section">
+          <div>
+            <p class="int-group-title">Delivery &amp; Collaboration</p>
+            <p class="int-names">Jira · Azure DevOps · GitHub · GitLab · Bitbucket<br>
+              Confluence · TestRail · Figma · Teams · SharePoint<br>
+              Jenkins · Bitrise</p>
+          </div>
+          <div>
+            <p class="int-group-title">AI Providers</p>
+            <p class="int-names">Anthropic · OpenAI · Gemini · AWS Bedrock<br>
+              Vertex AI · Ollama · DIAL · GitHub Copilot</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== ARCHITECTURE ======== -->
+<section id="architecture">
+  <div class="container">
+    <p class="label label-accent reveal">Architecture</p>
+    <h2 class="section-title reveal">From ticket to<br><span class="gradient-text">pull request.</span></h2>
+    <p class="section-sub reveal">
+      A ticket changes state — and a factory wakes up. Clean runner. Fresh tools.
+      Full context. The model reasons. A pull request waits for a human.
+      Nothing to deploy. Nothing to babysit.
+    </p>
+
+    <div class="arch-steps reveal">
+      <div class="arch-step">
+        <span class="arch-num">01</span>
+        <div class="arch-title">Ticket state change</div>
+        <div class="arch-desc">ADO or Jira fires a service hook on ticket update</div>
+      </div>
+      <div class="arch-step">
+        <span class="arch-num">02</span>
+        <div class="arch-title">Bridge function</div>
+        <div class="arch-desc">Azure Function triggers a <code style="font-family:var(--mono);font-size:0.7rem">workflow_dispatch</code></div>
+      </div>
+      <div class="arch-step">
+        <span class="arch-num">03</span>
+        <div class="arch-title">Clean runner</div>
+        <div class="arch-desc">GitHub Actions installs DMTools CLI fresh per run</div>
+      </div>
+      <div class="arch-step">
+        <span class="arch-num">04</span>
+        <div class="arch-title">Build context</div>
+        <div class="arch-desc">preJSAction pulls ticket, wiki, repo, knowledge base</div>
+      </div>
+      <div class="arch-step">
+        <span class="arch-num">05</span>
+        <div class="arch-title">LLM reasoning</div>
+        <div class="arch-desc">Copilot CLI / Codex processes with full context</div>
+      </div>
+      <div class="arch-step">
+        <span class="arch-num">06</span>
+        <div class="arch-title">Publish results</div>
+        <div class="arch-desc">postJSAction creates git branch + Pull Request</div>
+      </div>
+      <div class="arch-step">
+        <span class="arch-num">07</span>
+        <div class="arch-title">Human in loop</div>
+        <div class="arch-desc">Engineer reviews and approves the generated PR</div>
+      </div>
+    </div>
+
+    <div class="arch-note reveal">
+      <strong>Zero persistent infrastructure.</strong>
+      DMTools installs fresh on every CI run. No server to maintain, no agent process to babysit —
+      just clean, repeatable, auditable automation.
+    </div>
+  </div>
+</section>
+
+<!-- ======== CODE ======== -->
+<section id="code">
+  <div class="container">
+    <p class="label label-accent reveal">Developer Experience</p>
+    <h2 class="section-title reveal">Jobs and agents in<br>plain <span class="gradient-text">JavaScript.</span></h2>
+    <p class="section-sub reveal">
+      Read the ticket. Pull the page. Ask the model. Ship the result.
+      Your engineers already speak this language.
+    </p>
+
+    <div class="code-block reveal">
+      <div class="code-header">
+        <div class="dots">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <span class="code-fname">agents/story_development.js</span>
+      </div>
+      <div class="code-body">
+<pre><span class="cc">// 1 — Read context from every connected system</span>
+<span class="ck">const</span> ticket   = <span class="ck">await</span> <span class="cf">jira_get_ticket</span>(<span class="cs">'PROJ-123'</span>);
+<span class="ck">const</span> wikiPage  = <span class="ck">await</span> <span class="cf">confluence_content_by_title</span>(<span class="cs">'API Design Guidelines'</span>);
+<span class="ck">const</span> openPRs   = <span class="ck">await</span> <span class="cf">github_list_prs</span>({ state: <span class="cs">'open'</span> });
+
+<span class="cc">// 2 — Build context and ask the model</span>
+<span class="ck">await</span> <span class="cf">file_write</span>(<span class="cs">'context.md'</span>, buildContext(ticket, wikiPage, openPRs));
+<span class="ck">const</span> result = <span class="ck">await</span> <span class="cf">gemini_ai_chat</span>({
+  prompt:  <span class="cs">`Implement the story: <span class="cn">${ticket.summary}</span>`</span>,
+  context: <span class="cf">file_read</span>(<span class="cs">'context.md'</span>)
+});
+
+<span class="cc">// 3 — Ship the result — branch + pull request, automated</span>
+<span class="ck">await</span> <span class="cf">github_create_branch</span>(<span class="cs">`feature/PROJ-123`</span>);
+<span class="ck">await</span> <span class="cf">github_create_pull_request</span>({
+  title:  ticket.summary,
+  body:   result.explanation,
+  branch: <span class="cs">`feature/PROJ-123`</span>
+});</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== PATHS ======== -->
+<section id="paths">
+  <div class="container">
+    <p class="label label-accent reveal">Usage Paths</p>
+    <h2 class="section-title reveal">Adopt it<br><span class="gradient-text">your way.</span></h2>
+    <p class="section-sub reveal">
+      Start from the terminal. Graduate to jobs. Wire into CI.
+      Share as agent skills. Each path delivers value independently.
+    </p>
+
+    <div class="paths-grid">
+      <div class="path-card reveal">
+        <div class="path-icon">⌨️</div>
+        <div class="path-title">CLI Tools</div>
+        <div class="path-desc">
+          Execute direct tool calls and integration operations from the terminal.
+          320+ tools across 20+ systems — instantly available.
+        </div>
+        <a href="https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/mcp-tools" class="path-link" target="_blank" rel="noopener">MCP tools reference →</a>
+      </div>
+
+      <div class="path-card reveal">
+        <div class="path-icon">🔄</div>
+        <div class="path-title">Jobs &amp; Agents</div>
+        <div class="path-desc">
+          Run orchestrated workflows — AI teammate, reporting, test generation,
+          story development — in plain JavaScript.
+        </div>
+        <a href="https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/jobs" class="path-link" target="_blank" rel="noopener">Jobs reference →</a>
+      </div>
+
+      <div class="path-card reveal">
+        <div class="path-icon">🚀</div>
+        <div class="path-title">CI / CD Pipelines</div>
+        <div class="path-desc">
+          Run DMTools in GitHub Actions, GitLab CI, Jenkins, or Bitrise for
+          ticket processing and AI-teammate flows at scale.
+        </div>
+        <a href="https://github.com/epam/dm.ai/blob/main/dmtools-ai-docs/references/workflows/github-actions-teammate.md" class="path-link" target="_blank" rel="noopener">GitHub Actions guide →</a>
+      </div>
+
+      <div class="path-card reveal">
+        <div class="path-icon">🤖</div>
+        <div class="path-title">Agent Skills</div>
+        <div class="path-desc">
+          Install project-level DMTools skills for Cursor, Claude, Codex,
+          and GitHub Copilot. Your agents gain full delivery superpowers.
+        </div>
+        <a href="https://github.com/epam/dm.ai/blob/main/dmtools-ai-docs/SKILL.md" class="path-link" target="_blank" rel="noopener">Skill guide →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== CTA ======== -->
+<section id="cta">
+  <div class="glow glow-cyan"  style="top:-80px;left:35%;opacity:0.18"></div>
+  <div class="glow glow-lilac" style="bottom:-180px;right:-180px"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <div class="reveal">
+      <p class="label">Get Started</p>
+      <h2>Build your<br><span class="gradient-text">AI factory.</span></h2>
+      <p style="font-size:1.05rem;color:var(--muted);max-width:520px;margin-top:1.5rem;line-height:1.75">
+        Open source. Apache 2.0. Java 17+ baseline.
+        One command to install — and your enterprise AI factory is ready.
+      </p>
+
+      <div style="margin-top:2.5rem">
+        <div class="tab-row">
+          <button class="tab-btn active" onclick="switchTab('unix',this)">Linux / macOS</button>
+          <button class="tab-btn"        onclick="switchTab('ps',  this)">Windows PowerShell</button>
+          <button class="tab-btn"        onclick="switchTab('skill',this)">Agent Skill</button>
+        </div>
+
+        <div id="tab-unix" class="tab-panel active">
+          <div class="cmd-box">
+            <code id="cmd-unix">curl -fsSL https://github.com/epam/dm.ai/releases/latest/download/install.sh | bash</code>
+            <button class="copy-btn" onclick="copy('cmd-unix')" title="Copy">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="tab-ps" class="tab-panel">
+          <div class="cmd-box">
+            <code id="cmd-ps">irm https://github.com/epam/dm.ai/releases/latest/download/install.ps1 | iex</code>
+            <button class="copy-btn" onclick="copy('cmd-ps')" title="Copy">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div id="tab-skill" class="tab-panel">
+          <div class="cmd-box">
+            <code id="cmd-skill">curl -fsSL https://github.com/epam/dm.ai/releases/latest/download/skill-install.sh | bash</code>
+            <button class="copy-btn" onclick="copy('cmd-skill')" title="Copy">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="cta-btns">
+        <a href="https://github.com/epam/dm.ai" class="btn-primary" target="_blank" rel="noopener">★ &nbsp;Star on GitHub</a>
+        <a href="https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/installation" class="btn-outline" target="_blank" rel="noopener">Full install guide</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======== FOOTER ======== -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-brand-row">
+          <span class="epam-badge">EPAM</span>
+          <span class="brand-name gradient-text">DMTools</span>
+        </div>
+        <p class="footer-desc">
+          Enterprise AI-factory orchestrator for automating delivery workflows.
+          Open source under Apache 2.0.
+        </p>
+      </div>
+
+      <div>
+        <p class="footer-col-title">Docs</p>
+        <div class="footer-links">
+          <a href="https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/installation" class="footer-link" target="_blank" rel="noopener">Installation</a>
+          <a href="https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/configuration" class="footer-link" target="_blank" rel="noopener">Configuration</a>
+          <a href="https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/mcp-tools" class="footer-link" target="_blank" rel="noopener">MCP Tools</a>
+          <a href="https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/jobs" class="footer-link" target="_blank" rel="noopener">Jobs &amp; Agents</a>
+        </div>
+      </div>
+
+      <div>
+        <p class="footer-col-title">Community</p>
+        <div class="footer-links">
+          <a href="https://github.com/epam/dm.ai" class="footer-link" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/epam/dm.ai/releases" class="footer-link" target="_blank" rel="noopener">Releases</a>
+          <a href="https://github.com/epam/dm.ai/blob/main/CONTRIBUTING.md" class="footer-link" target="_blank" rel="noopener">Contributing</a>
+          <a href="https://github.com/epam/dm.ai/issues" class="footer-link" target="_blank" rel="noopener">Issues</a>
+        </div>
+      </div>
+
+      <div>
+        <p class="footer-col-title">EPAM</p>
+        <div class="footer-links">
+          <a href="https://www.epam.com" class="footer-link" target="_blank" rel="noopener">epam.com</a>
+          <a href="https://solutionshub.epam.com" class="footer-link" target="_blank" rel="noopener">SolutionsHub</a>
+          <a href="https://github.com/epam/dm.ai/blob/main/LICENSE" class="footer-link" target="_blank" rel="noopener">License</a>
+          <a href="https://github.com/epam/dm.ai/blob/main/SECURITY.md" class="footer-link" target="_blank" rel="noopener">Security</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© 2026 EPAM Systems, Inc. DMTools is open source software.</p>
+      <span class="license-tag">Apache 2.0</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ======== TOAST ======== -->
+<div class="toast" id="toast">Copied to clipboard!</div>
+
+<script>
+  /* ---- OS switch (hero) ---- */
+  const CMD = {
+    unix: 'curl -fsSL https://github.com/epam/dm.ai/releases/latest/download/install.sh | bash',
+    win:  'irm https://github.com/epam/dm.ai/releases/latest/download/install.ps1 | iex'
+  };
+
+  function setOS(os, btn) {
+    document.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('hero-cmd').textContent = CMD[os];
+  }
+
+  /* ---- CTA tabs ---- */
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+
+  /* ---- Copy to clipboard ---- */
+  function copy(elId) {
+    const text = document.getElementById(elId).textContent.trim();
+    navigator.clipboard.writeText(text).then(() => {
+      const t = document.getElementById('toast');
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2200);
+    });
+  }
+
+  /* ---- Counter animation ---- */
+  function animateCounter(el) {
+    const target = +el.dataset.to;
+    const dur = 1600;
+    const t0 = performance.now();
+    const tick = now => {
+      const p = Math.min((now - t0) / dur, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.floor(ease * target);
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = target;
+    };
+    requestAnimationFrame(tick);
+  }
+
+  /* animate hero counters immediately */
+  document.querySelectorAll('#hero .ctr').forEach(animateCounter);
+
+  /* ---- Scroll reveal ---- */
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const el = entry.target;
+      el.classList.add('in');
+
+      /* counters inside revealed elements */
+      el.querySelectorAll('.ctr').forEach(animateCounter);
+
+      /* bar chart animation */
+      el.querySelectorAll('.bar-fill').forEach(bar => {
+        bar.style.transform = `scaleX(${getComputedStyle(bar).getPropertyValue('--w') || 0})`;
+      });
+
+      io.unobserve(el);
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
