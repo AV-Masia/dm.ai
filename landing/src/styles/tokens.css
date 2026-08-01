@@ -1,0 +1,166 @@
+/* Tokens — palette, themes, scoped overrides
+   Part of the DMTools landing page stylesheet, split by concern.
+   Load order is fixed by the <link> tags in index.html — see landing/README.md. */
+
+/* ==========================================================================
+   DMTools landing page
+   EPAM Brandbook 2023 — Night (dark, default) and Snow (light) variants.
+
+   Palette source: branded/epam/dmtools film brief (IstiN/yoclip-examples).
+     Canvas   Night #060606 / Snow #FBFAFA
+     Accents  Sea #00F6FF · Mint #00FFF0 · Lilac #B896FF · Sky #7BA8FF
+
+   Night is the default and the tuned target: the page is a dark surface with
+   cyan-to-lilac accents, and the light variant is the alternate rather than the
+   other way round. Snow uses darkened accent variants so text and rules keep
+   WCAG AA contrast on a light canvas.
+
+   Brand rule applied throughout: the gradient carries one keyword per headline
+   plus the counted figures and the rules that measure them. Everything else
+   stays monochrome — that restraint is what keeps the page reading as EPAM
+   rather than as a generic developer-tool template.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------------------- */
+
+:root {
+  /* Snow — default */
+  --canvas:      #FBFAFA;
+  --surface:     #FFFFFF;
+  --surface-alt: #F2F1F0;
+  --text:        #060606;
+  --muted:       rgba(6, 6, 6, 0.58);
+  --faint:       rgba(6, 6, 6, 0.38);
+  --hairline:    rgba(6, 6, 6, 0.12);
+  --hairline-strong: rgba(6, 6, 6, 0.22);
+
+  --sea:   #0088A0;
+  --mint:  #00998F;
+  --lilac: #7B4FE0;
+  --sky:   #3A6BD6;
+
+  /* The accent at a weight that carries small text, in either direction. The
+     eyebrows are 11px and the step numbers 11px on a fill, both of which need
+     4.5:1; --sea measures 4.01:1 against the canvas, just under. Same hue and
+     saturation, darker. Night's --sea is already 15:1 there and aliases back. */
+  --sea-ink: #00798F;
+
+  --grad: linear-gradient(96deg, var(--mint) 0%, var(--sea) 46%, var(--lilac) 100%);
+
+  /* The filled button needs its own stops on Snow. The accents above are tuned
+     as *text* on a light canvas; used as a *fill* under white, the mint end
+     measures 3.42:1 — under AA for a 15px label. These are the same three hues
+     pulled dark enough that --btn-ink clears 4.5:1 across the whole sweep.
+     Night has no such problem and reuses --grad as it stands. */
+  --grad-btn: linear-gradient(96deg, #00726B 0%, #00677A 46%, #5B33B8 100%);
+  --glow-a: rgba(0, 136, 160, 0.16);
+  --glow-b: rgba(123, 79, 224, 0.14);
+
+  /* Diagram nodes. Agents carry the lilac accent, systems the sea one, each
+     over a tinted fill so the pill still reads as an object rather than an
+     outline. Label colours are pulled darker than the border they sit next
+     to — the border only has to be seen, the text has to be read. */
+  --node-ai-fill:   #E9DEFF;
+  --node-ai-line:   #7B4FE0;
+  --node-ai-text:   #5B2FBF;
+
+  --node-sys-fill:  #CFE9F1;
+  --node-sys-line:  #0088A0;
+  --node-sys-text:  #035666;
+
+  /* Sora carries the geometric, wide-aperture look the dark canvas needs, and
+     it holds up at the 100–200 weights the headlines are set in — Nunito Sans
+     thins out to a hairline well before that. JetBrains Mono replaces Fira Code
+     for the same reason at small sizes: a taller x-height stays legible at 13px
+     inside the terminal panels. */
+  --font: 'Sora', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, Menlo, monospace;
+
+  --shell: 1180px;
+  --gutter: clamp(1.25rem, 5vw, 4rem);
+  --band: clamp(5rem, 11vw, 9.5rem);
+
+  /* Soft cards, fully round controls. The 4px this used to carry read as a
+     sharp editorial page; the panels are objects sitting on the canvas here,
+     and they need a radius you can see. */
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-pill: 999px;
+
+  /* Ink for the gradient-filled button, and it has to flip with the theme: Snow
+     darkens the accents to hold AA on a light canvas, so the fill here is a deep
+     teal-to-violet and the label has to be light. Night keeps the bright mint
+     end and takes dark ink. Getting this backwards puts dark text on a dark
+     fill, which is exactly what the light theme would have shipped. */
+  --btn-ink: #FBFAFA;
+
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  color-scheme: light;
+}
+
+/* Night — the default. Surfaces are opaque greys rather than translucent white:
+   a card stacked on a panel stacked on the canvas compounded three alpha layers
+   and drifted lighter each time, which is what made the panels look washed out
+   against #060606. Fixed values keep every card at the same step. */
+[data-theme='night'] {
+  --canvas:      #060606;
+  --surface:     #161616;
+  --surface-alt: #1C1C1C;
+  --text:        #F5F5F4;
+  --muted:       #A3A3A0;
+  --faint:       #6B6B68;
+  --hairline:    #2A2A2A;
+  --hairline-strong: #3A3A3A;
+
+  --sea:   #00F6FF;
+  --mint:  #00FFF0;
+  --lilac: #B896FF;
+  --sky:   #7BA8FF;
+  --sea-ink: var(--sea);
+
+  /* The hero blooms are the only large colour on the page, so they carry more
+     weight here than the 13% they had — at that strength they read as a smudge
+     on the canvas rather than as light. */
+  /* Dark ink, against the bright mint end of the fill. */
+  --btn-ink: #04211F;
+  --grad-btn: var(--grad);
+
+  --glow-a: rgba(0, 246, 255, 0.20);
+  --glow-b: rgba(184, 150, 255, 0.18);
+
+  --node-ai-fill:   #17121F;
+  --node-ai-line:   #B896FF;
+  --node-ai-text:   #CDB4FF;
+
+  --node-sys-fill:  #0B191D;
+  --node-sys-line:  #00F6FF;
+  --node-sys-text:  #86EEF8;
+
+  color-scheme: dark;
+}
+
+/* The code panel is the one place that stays dark in both themes: the token
+   colours below are tuned for a dark ground, and a terminal surface reads as
+   deliberate on a light page. */
+.panel--dark {
+  --surface:     #161616;
+  --surface-alt: #1C1C1C;
+  --text:        #F5F5F4;
+  --muted:       #A3A3A0;
+  --faint:       #6B6B68;
+  --hairline:    #2A2A2A;
+  --hairline-strong: #3A3A3A;
+  --sea:   #00F6FF;
+  --mint:  #00FFF0;
+  --lilac: #B896FF;
+  --sky:   #7BA8FF;
+  --sea-ink: var(--sea);
+  /* Carried with the accents it belongs to: this scope restates the Night
+     gradient, so it has to restate the ink that goes on top of it. */
+  --btn-ink: #04211F;
+  --grad-btn: var(--grad);
+  color: var(--text);
+}

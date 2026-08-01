@@ -1,0 +1,288 @@
+/* ===== base ===== */
+/* Reset and base elements
+   Part of the DMTools landing page stylesheet, split by concern.
+   Load order is fixed by the <link> tags in index.html — see landing/README.md. */
+
+/* --------------------------------------------------------------------------
+   2. Reset and base
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  /* Clears the 4.5rem sticky nav with room to spare, so anchor targets never
+     land underneath it. */
+  scroll-padding-top: 6.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 300;
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.35s var(--ease), color 0.35s var(--ease);
+}
+
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+code, pre { font-family: var(--mono); }
+
+::selection { background: var(--text); color: var(--canvas); }
+
+:focus-visible {
+  outline: 2px solid var(--sea);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 200;
+  padding: 0.85rem 1.4rem;
+  background: var(--text);
+  color: var(--canvas);
+  font-weight: 800;
+}
+.skip-link:focus { left: 0; }
+
+/* ===== typography ===== */
+/* Type scale and text helpers
+   Part of the DMTools landing page stylesheet, split by concern.
+   Load order is fixed by the <link> tags in index.html — see landing/README.md. */
+
+/* --------------------------------------------------------------------------
+   4. Typography
+   -------------------------------------------------------------------------- */
+
+/* 11px, wide-tracked and uppercase — the least legible setting on the page, and
+   it labels every section. --faint measures 2.7:1 on Snow and 3.0:1 on Night,
+   so this one rule was failing AA nine times over. */
+.eyebrow {
+  display: block;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sea-ink);
+  margin-bottom: 1.75rem;
+}
+
+.eyebrow--rule {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.eyebrow--rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--hairline);
+}
+
+/* Sora at 100 is the page's signature setting, and it only works large: the
+   display and the section headlines carry it, h3 stays at 300 because card
+   titles run at 16–20px where a hairline weight stops being readable. */
+h1, h2, h3 { letter-spacing: -0.028em; line-height: 1.02; }
+h1 { font-weight: 100; }
+h2 { font-weight: 200; }
+h3 { font-weight: 300; }
+
+.display {
+  font-size: clamp(2.85rem, 7.4vw, 6.25rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+}
+
+.headline {
+  font-size: clamp(2.1rem, 4.6vw, 3.9rem);
+  line-height: 1.03;
+}
+
+.subhead {
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: 60ch;
+}
+
+.lede {
+  font-size: clamp(1.1rem, 1.7vw, 1.45rem);
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 54ch;
+}
+
+/* The single permitted gradient keyword per headline. */
+.accent {
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ===== layout ===== */
+/* Layout primitives
+   Part of the DMTools landing page stylesheet, split by concern.
+   Load order is fixed by the <link> tags in index.html — see landing/README.md. */
+
+/* --------------------------------------------------------------------------
+   3. Layout primitives
+   -------------------------------------------------------------------------- */
+
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.band {
+  position: relative;
+  padding: var(--band) 0;
+  border-top: 1px solid var(--hairline);
+  background: var(--canvas);
+  color: var(--text);
+  transition: background-color 0.35s var(--ease), color 0.35s var(--ease);
+}
+
+.band--flush { border-top: none; }
+
+/* Editorial split: headline column + content column. */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+@media (max-width: 960px) {
+  .split { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* ===== ui ===== */
+/* Buttons, toast, reveal
+   Part of the DMTools landing page stylesheet, split by concern.
+   Load order is fixed by the <link> tags in index.html — see landing/README.md. */
+
+/* --------------------------------------------------------------------------
+   6. Buttons
+   -------------------------------------------------------------------------- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  height: 3.125rem;
+  padding: 0 1.75rem;
+  /* Fully round. The buttons are the one element repeated in every section, so
+     the shape they carry sets the page's register more than any single panel. */
+  border-radius: var(--radius-pill);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition: transform 0.2s var(--ease), background-color 0.2s var(--ease),
+              color 0.2s var(--ease), border-color 0.2s var(--ease),
+              filter 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+
+/* Lifts on hover, presses on click — the same 1px vocabulary the cards use. */
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(1px); }
+
+/* The primary action is the only filled gradient on the page. --btn-ink rather
+   than --canvas: the fill is mint at its left edge, and #060606 on mint is a
+   harsher step than the green-cast near-black. */
+.btn--solid {
+  background: var(--grad-btn);
+  color: var(--btn-ink);
+}
+.btn--solid:hover { filter: brightness(1.08); }
+
+.btn--ghost {
+  border: 1px solid var(--hairline-strong);
+  color: var(--text);
+}
+/* Picks up the accent rather than going brighter monochrome, so the pair reads
+   as primary/secondary of one system. */
+.btn--ghost:hover { border-color: var(--sea); color: var(--sea); }
+
+.btn--sm { height: 2.5rem; padding: 0 1.15rem; font-size: 0.875rem; }
+
+.textlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 1px solid var(--hairline-strong);
+  padding-bottom: 0.15rem;
+  transition: border-color 0.2s var(--ease), gap 0.2s var(--ease);
+}
+.textlink:hover { border-color: var(--text); gap: 0.75rem; }
+
+/* --------------------------------------------------------------------------
+   18. Toast
+   -------------------------------------------------------------------------- */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 2rem;
+  transform: translate(-50%, 1.5rem);
+  z-index: 200;
+  padding: 0.8rem 1.4rem;
+  border-radius: var(--radius);
+  background: var(--text);
+  color: var(--canvas);
+  font-size: 0.875rem;
+  font-weight: 600;
+  /* Hidden outright when idle — an empty toast is still a painted box. */
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform 0.35s var(--ease), opacity 0.3s var(--ease), visibility 0.3s;
+}
+
+.toast.is-visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* --------------------------------------------------------------------------
+   19. Reveal
+   -------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+
+.reveal[data-delay='1'] { transition-delay: 0.08s; }
+.reveal[data-delay='2'] { transition-delay: 0.16s; }
+.reveal[data-delay='3'] { transition-delay: 0.24s; }
+.reveal[data-delay='4'] { transition-delay: 0.32s; }
+
+@media (max-width: 480px) {
+  .btn { width: 100%; }
+}
