@@ -3,6 +3,7 @@ name: Deploy Landing Page to GitHub Pages
 on:
   push:
     branches:
+      - main
       - landing
     paths:
       - 'landing/**'
@@ -27,16 +28,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # GA_MEASUREMENT_ID is a repository variable (Settings -> Variables -> Actions),
+      # not a secret: a GA4 measurement ID is public as soon as the page is served.
+      # When it is absent the whole snippet is removed instead of being left
+      # half-written, which would break the document.
       - name: Inject Google Analytics measurement ID
+        env:
+          GA_MEASUREMENT_ID: ${{ vars.GA_MEASUREMENT_ID }}
         run: |
-          GA_ID="${{ vars.GA_MEASUREMENT_ID }}"
-          if [ -n "$GA_ID" ]; then
-            sed -i "s/__GA_MEASUREMENT_ID__/${GA_ID}/g" landing/index.html
-            echo "✅ Google Analytics injected: ${GA_ID}"
+          set -euo pipefail
+          PAGE=landing/index.html
+
+          if [ -n "${GA_MEASUREMENT_ID}" ]; then
+            sed -i "s/__GA_MEASUREMENT_ID__/${GA_MEASUREMENT_ID}/g" "$PAGE"
+            echo "Google Analytics enabled: ${GA_MEASUREMENT_ID}"
           else
-            # Remove GA tags when no ID is configured — keep the page clean
-            sed -i '/__GA_MEASUREMENT_ID__/d' landing/index.html
-            echo "ℹ️  GA_MEASUREMENT_ID not set — analytics script removed"
+            sed -i '/<!-- ga:start/,/<!-- ga:end -->/d' "$PAGE"
+            echo "GA_MEASUREMENT_ID not set - analytics snippet removed"
+          fi
+
+          if grep -q '__GA_MEASUREMENT_ID__' "$PAGE"; then
+            echo "::error::GA placeholder still present after processing"
+            exit 1
           fi
 
       - name: Setup Pages
