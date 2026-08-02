@@ -18,12 +18,18 @@ pipelines on GitHub Actions, GitLab CI, Jenkins or Bitrise.
 
 ## Documentation
 
-- [Skill entry point](https://github.com/epam/dm.ai/blob/main/dmtools-ai-docs/SKILL.md): how an AI agent installs and uses DMTools in a project
-- [Installation](https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/installation): install script, requirements, troubleshooting
-- [Configuration](https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/configuration): environment variables per integration and per AI provider
-- [MCP tools reference](https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/mcp-tools): every tool with its parameters, grouped by integration
-- [Jobs and agents](https://github.com/epam/dm.ai/tree/main/dmtools-ai-docs/references/jobs): the job system, JavaScript agents, orchestration
-- [GitHub Actions teammate](https://github.com/epam/dm.ai/blob/main/dmtools-ai-docs/references/workflows/github-actions-teammate.md): running DMTools on ticket state changes
+Served as HTML on this site, rendered from the same Markdown the DMTools agent
+skill reads. Relative links, because this file is static and a fork publishes
+under /<repo>/.
+
+- [Documentation index](docs/): every reference page, grouped by section
+- [Skill entry point](docs/skill/): how an AI agent installs and uses DMTools in a project
+- [Installation](docs/references/installation/): install script, requirements, troubleshooting
+- [Configuration](docs/references/configuration/): environment variables per integration and per AI provider
+- [MCP tools reference](docs/references/mcp-tools/): every tool with its parameters, grouped by integration
+- [Jobs](docs/references/jobs/): the job system and its configuration
+- [Agents](docs/references/agents/javascript-agents/): JavaScript agents and orchestration
+- [GitHub Actions teammate](docs/references/workflows/github-actions-teammate/): running DMTools on ticket state changes
 
 ## Integrations
 

@@ -124,7 +124,11 @@ export const navLinks: NavLink[] = [
   { label: 'Architecture', href: '#architecture' },
   { label: 'Adoption', href: '#paths' },
   { label: 'FAQ', href: '#faq' },
-  { label: 'Docs', href: DOCS, external: true },
+  // The rendered documentation, not the folder on GitHub. Sending a reader to
+  // a directory listing was the only option before these pages existed; it is
+  // also the link an assistant follows, and Markdown on github.com carries the
+  // whole site's chrome around the answer.
+  { label: 'Docs', href: `${basePath}docs/` },
 ];
 
 export interface FooterColumn {
