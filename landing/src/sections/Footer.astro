@@ -2,9 +2,8 @@
 import Brand from '../components/Brand.astro';
 import { footerColumns, lastModified } from '../data/content';
 
-// Spelled out rather than left as the ISO string: this line is read by people
-// and by whatever summarises the rendered page, and "2026-08-02" is the one
-// format that means a different date depending on where the reader is from.
+// Spelled out: "2026-08-02" reads as a different date depending on the reader.
+// The machine-readable form stays in the <time datetime> below.
 const updated = new Date(`${lastModified}T00:00:00Z`).toLocaleDateString('en-GB', {
   day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
 });

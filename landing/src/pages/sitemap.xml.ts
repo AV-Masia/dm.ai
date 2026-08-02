@@ -10,18 +10,14 @@ import { hrefOf } from '../lib/docs';
 export const GET: APIRoute = async ({ site }) => {
   const root = new URL(basePath, site).href;
 
-  // Every reference page, from the collection rather than a hand-kept list —
-  // adding a Markdown file to dmtools-ai-docs is meant to be the whole job.
-  // Deduplicated because hrefOf folds the root README onto /docs/, which the
-  // index route also claims.
+  // From the collection, so adding a Markdown file is the whole job.
+  // Deduplicated: hrefOf folds the root README onto /docs/, which the index
+  // route also claims.
   const docs = await getCollection('docs');
   const docUrls = [...new Set(docs.map((doc) => new URL(hrefOf(doc.id, basePath), site).href))]
     .sort();
 
-  // pricing.md is listed because it is the answer to the one question an
-  // assistant has to settle before it will recommend anything, and nothing on
-  // the page links to it — without a sitemap entry it would only ever be found
-  // by guessing the filename.
+  // pricing.md is listed because nothing on the site links to it.
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>

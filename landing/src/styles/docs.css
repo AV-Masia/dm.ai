@@ -7,8 +7,7 @@
    D1. Shell
    -------------------------------------------------------------------------- */
 
-/* Wider than --shell: three columns of running reference do not fit in the
-   1180px the landing page is set to, and the middle one has to stay readable. */
+/* Wider than --shell: three columns do not fit the landing page's 1180px. */
 .docs {
   --docs-shell: 1560px;
   --docs-side: 17rem;
@@ -83,8 +82,7 @@
    D2. Side navigation
    -------------------------------------------------------------------------- */
 
-/* Its own scroll region, not the page's: sixty entries are longer than most
-   documents, and a sidebar that scrolls the article away is worse than none. */
+/* Its own scroll region: sixty entries outrun most documents. */
 .docs__side {
   position: sticky;
   top: var(--docs-bar);
@@ -120,8 +118,7 @@
 
 .docs__link:hover { color: var(--text); background: var(--surface); }
 
-/* aria-current is the state, so it is what the style hangs off — no second
-   class to keep in step with it. */
+/* Hangs off aria-current, so there is no second class to keep in step. */
 .docs__link[aria-current='page'] {
   color: var(--text);
   background: var(--surface);
@@ -229,16 +226,15 @@
   color: var(--muted);
 }
 
-/* The anchor Astro adds to every heading. Visible on hover only — a column of
-   hashes down the left of a reference page is noise. */
+/* Clears the sticky bar, so a jump from the contents list does not land the
+   heading underneath it. */
 .prose :is(h1, h2, h3, h4) { scroll-margin-top: calc(var(--docs-bar) + 1rem); }
 
 .prose p, .prose li { line-height: 1.75; }
 
-/* grid, for the gap between items — but an auto track sizes to max-content, so
-   a list item holding a long parameter name or an unbroken identifier widened
-   the whole column and put a horizontal scrollbar on the page at 390px. The
-   explicit minmax(0, 1fr) is what stops the track growing past its container. */
+/* grid for the gap, but an auto track sizes to max-content: one item holding an
+   unbroken identifier widened the column and put a scrollbar on the page at
+   390px. minmax(0, 1fr) is what stops the track growing past its container. */
 .prose :is(ul, ol) {
   padding-left: 1.35rem;
   display: grid;
@@ -247,9 +243,8 @@
 }
 .prose li::marker { color: var(--faint); }
 
-/* The reference pages are full of identifiers with no spaces in them —
-   jira_add_fix_version, environment variable names, URLs. Without this they set
-   one per line and push the column open. */
+/* These pages are full of unbroken identifiers — jira_add_fix_version, env var
+   names, URLs — which otherwise push the column open. */
 .prose { overflow-wrap: break-word; }
 
 .prose a {
@@ -274,9 +269,8 @@
   word-break: break-word;
 }
 
-/* Shiki writes its own background; the border and radius make it a panel like
-   the ones on the landing page, and the scroll keeps a long command from
-   widening the whole column. */
+/* Shiki writes the background; the border makes it a panel like the landing
+   page's, and the scroll keeps a long command from widening the column. */
 .prose pre {
   padding: 1.15rem 1.25rem;
   border: 1px solid var(--hairline);
@@ -296,8 +290,7 @@
 }
 .prose blockquote > * + * { margin-top: 0.6rem; }
 
-/* Tables carry most of the tool reference, and several run past the column.
-   The wrapper scrolls rather than the page. */
+/* Most of the tool reference is tables, several wider than the column. */
 .prose table {
   width: 100%;
   border-collapse: collapse;
@@ -392,8 +385,7 @@
   .docs__shell { grid-template-columns: minmax(0, 1fr); }
   .docs__menuBtn { display: grid; }
 
-  /* Off-canvas rather than hidden: the panel keeps its own scroll, and the
-     page behind it does not move under the reader. */
+  /* Off-canvas, so the page behind it does not move under the reader. */
   .docs__side {
     position: fixed;
     inset: var(--docs-bar) auto 0 0;

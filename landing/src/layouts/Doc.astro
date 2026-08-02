@@ -23,14 +23,12 @@ interface Props {
 const { title, description, id, headings = [], sourcePath } = Astro.props;
 
 const isRoot = id === ROOT_ID;
-// hrefOf, not the id: the root's id is the literal "index", and pasting that
-// into a path would canonicalise the docs index to /docs/index/.
+// hrefOf, not the id: the root's id is the literal "index".
 const canonical = new URL(hrefOf(id, basePath), Astro.site).href;
 const siteHome = new URL(basePath, Astro.site).href;
 const nav = await buildNav(basePath);
 
-// h2 and h3 only. The reference pages run to four levels, and a contents list
-// that deep stops being a way to find anything.
+// h2 and h3 only — these pages run to four levels, which is too deep to scan.
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
 const crumbs = [
@@ -215,8 +213,7 @@ const schema = {
       });
     }
 
-    // The current entry is the one thing in a 60-item list the reader did not
-    // choose to look at, so bring it into view rather than making them find it.
+    // Bring the current entry into view in a 60-item list.
     document.querySelector('.docs__link[aria-current="page"]')
       ?.scrollIntoView({ block: 'center' });
   </script>

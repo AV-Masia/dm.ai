@@ -23,14 +23,9 @@ const ogImage = absolute(meta.ogImage);
 const gaId = process.env.GA_MEASUREMENT_ID;
 
 /**
- * One @graph rather than three separate blocks.
- *
- * The three used to sit side by side as unrelated islands: a parser could read
- * that the page describes some software, that it holds a video, and that it
- * answers eight questions, without anything saying those are the same subject.
- * Nodes carry an @id and reference each other, so what an assistant extracts is
- * a product with a publisher, a film and an FAQ attached — one entity, not
- * three findings that happen to share a URL.
+ * One @graph, not separate blocks: the nodes carry an @id and reference each
+ * other, so what an assistant extracts is a product with a publisher, a film
+ * and an FAQ attached rather than three findings that share a URL.
  */
 const ids = {
   org: `${canonical}#organization`,
@@ -105,12 +100,9 @@ const graph = [
     publisher: { '@type': 'Organization', name: film.publisher.name, url: film.publisher.url },
   },
   /**
-   * The install section as a procedure. Google retired HowTo *rich results* in
-   * 2023, so this earns nothing in the blue links — it is here because the
-   * question an assistant gets asked is "how do I install DMTools", and the
-   * answer is three platform variants plus a verification step. Built from
-   * installTabs and verifyCommand so the steps cannot contradict the tabs the
-   * page actually renders.
+   * Google retired HowTo rich results in 2023, so this earns nothing in the blue
+   * links — it is here because "how do I install DMTools" is a question an
+   * assistant gets asked. Built from installTabs so it cannot contradict them.
    */
   {
     '@type': 'HowTo',
@@ -122,11 +114,8 @@ const graph = [
     about: { '@id': ids.app },
     supply: { '@type': 'HowToSupply', name: software.requirements },
     step: [
-      // The label verbatim, not "Install on {label}": the three tabs are two
-      // platforms and a delivery mode, so that phrasing produced "Install on
-      // Agent skill". The hint carries the requirement and is the half a reader
-      // actually needs, so it goes in with the command — with its markup
-      // stripped, since this is a plain-text field.
+      // The label verbatim: two of the three tabs are platforms and one is a
+      // delivery mode, so "Install on {label}" produced "Install on Agent skill".
       ...installTabs.map((tab, i) => ({
         '@type': 'HowToStep',
         position: i + 1,
@@ -186,13 +175,10 @@ const schemas = [{ '@context': 'https://schema.org', '@graph': graph }];
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <!-- Sora as a range, not a list of seven instances. Google Fonts serves the
-       same two woff2 files either way — Sora is variable, and the discrete
-       request only wrapped those files in fourteen @font-face rules with the
-       weight pinned. Asking for the axis costs nothing (33,652 bytes for latin
-       in both cases), shrinks this render-blocking stylesheet from 5,726 to 826
-       bytes, and makes every weight between 100 and 800 available rather than
-       the seven that happened to be listed. --><link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- The axis, not seven instances: Sora is variable and Google Fonts serves
+       the same two woff2 files either way, so this costs nothing, shrinks this
+       render-blocking stylesheet from 5,726 to 826 bytes, and makes every weight
+       available rather than the seven that happened to be listed. --><link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <!-- is:inline is load-bearing: a script Astro processes is deferred, which
        would let the wrong theme paint first. Night is the default rather than

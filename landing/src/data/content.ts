@@ -20,25 +20,18 @@ export const DOCS = `${REPO}/tree/main/dmtools-ai-docs`;
 const RELEASE = `${REPO}/releases/latest/download`;
 
 /**
- * The date sitemap.xml reports, the `dateModified` in the structured data, and
- * the line printed in the footer. Bump it when the page's content changes.
- *
- * It is stated in all three places because assistants weight recency and each
- * reads a different one: a crawler takes the sitemap, a parser takes the
- * schema, and a model summarising the rendered page takes the visible line.
+ * Feeds sitemap.xml, `dateModified` in the structured data, and the footer line.
+ * Bump it when the page's content changes.
  */
 export const lastModified = '2026-08-02';
 
 /**
- * The publisher as an entity rather than a name.
+ * The publisher as an entity: `sameAs` ties the page to the company an assistant
+ * already knows rather than to the string "EPAM".
  *
- * `sameAs` is what lets an assistant tie this page to the company it already
- * knows about instead of treating "EPAM" as a new string. Every URL here was
- * checked to resolve, and the set is deliberately short: EPAM Systems has no
- * English Wikipedia article — the `EPAM` article is a psychological learning
- * model, a different subject entirely — so the Wikidata item carries the
- * identity instead. Do not add a Wikipedia link without checking which EPAM it
- * points at.
+ * EPAM Systems has no English Wikipedia article — `/wiki/EPAM` is a
+ * psychological learning model, a different subject — so Wikidata carries the
+ * identity. Do not add a Wikipedia link without checking which EPAM it means.
  */
 export const organization = {
   name: 'EPAM Systems',
@@ -124,10 +117,7 @@ export const navLinks: NavLink[] = [
   { label: 'Architecture', href: '#architecture' },
   { label: 'Adoption', href: '#paths' },
   { label: 'FAQ', href: '#faq' },
-  // The rendered documentation, not the folder on GitHub. Sending a reader to
-  // a directory listing was the only option before these pages existed; it is
-  // also the link an assistant follows, and Markdown on github.com carries the
-  // whole site's chrome around the answer.
+  // The rendered docs, not the folder listing on GitHub.
   { label: 'Docs', href: `${basePath}docs/` },
 ];
 

@@ -2,20 +2,11 @@ import type { APIRoute } from 'astro';
 import { basePath, lastModified, software, REPO } from '../data/content';
 
 /**
- * Pricing as a file an agent can read.
+ * Pricing as a file an agent can parse without rendering the page.
  *
- * An assistant shortlisting delivery tooling on someone's behalf has to answer
- * "what does it cost" before it will recommend anything, and it answers that
- * from whatever it can parse without rendering a page. The FAQ on the landing
- * page says this too, but it says it inside an accordion in prose; this states
- * it as data.
- *
- * The awkward case for a free tool is that "no pricing page" reads the same as
- * "pricing hidden", and the second gets filtered out. Saying zero explicitly is
- * the whole point of the file.
- *
- * Generated rather than committed so the version and the date cannot go stale
- * separately from the rest of the site.
+ * For a free tool, "no pricing page" reads the same as "pricing hidden", and the
+ * second gets filtered out of a shortlist — so state zero explicitly. Generated,
+ * so the version and date cannot drift from the rest of the site.
  */
 export const GET: APIRoute = ({ site }) => {
   const root = new URL(basePath, site).href;

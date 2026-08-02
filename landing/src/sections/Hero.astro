@@ -3,24 +3,14 @@ import PlayIcon from '../components/PlayIcon.astro';
 
 const badges = ['EPAM Open Source', 'Apache 2.0', 'Java 17+'];
 
-/**
- * The hero used to close on four counted figures, three of which the Numbers
- * section counts again four screens later — the same claim twice reads as
- * having nothing else to say. The two that only ever appeared here stay; the
- * tool and integration counts moved into the panel beside them, where the CLI
- * prints them rather than the page asserting them.
- */
+// Only the two figures the Numbers section does not count again. The tool and
+// integration counts moved into the panel, where the CLI prints them.
 const stats = [
   { value: '4', label: 'Adoption paths, each valuable on its own' },
   { value: '0', label: 'Servers to run or agents to babysit' },
 ];
 
-/**
- * A real session, not a mock-up: every command is a CLI entry point that ships
- * — `list`, a direct MCP tool call, and a job run — so the panel demonstrates
- * the claim the headline makes instead of illustrating it. The page had no
- * product in frame until the code section, eight screens down.
- */
+/** Every command is a CLI entry point that ships — a demonstration, not a mock-up. */
 const session = [
   {
     cmd: 'dmtools list',
@@ -73,9 +63,8 @@ const session = [
     </div>
 
     <div class="hero__proof reveal" data-delay="4">
-      {/* aria-hidden with a plain-language summary beside it: read aloud, the
-          prompts and the JSON are noise, and the lede above already states what
-          the session shows. */}
+      {/* aria-hidden: read aloud the prompts and JSON are noise, and the lede
+          already states what the session shows. */}
       <div class="term panel--dark" aria-hidden="true">
         <div class="term__bar">
           <span class="term__dot"></span>
@@ -109,15 +98,10 @@ const session = [
   /**
    * The session types itself out once, when the panel reaches the reader.
    *
-   * It runs off the rendered markup rather than a copy of the data: the text is
-   * read out of the DOM and put back a character at a time, so the panel that
-   * ships without JavaScript — and the one a reduced-motion reader gets — is the
-   * finished session, not an empty box waiting for a script.
-   *
-   * Nothing is emptied that holds the layout open. Only .term__text is cleared,
-   * and the prompt beside it keeps the line at full height; the output lines
-   * fade rather than unhide. The panel is therefore the same height before,
-   * during and after the run, and the hero never reflows under the reader.
+   * Runs off the rendered markup, so the no-JavaScript and reduced-motion pages
+   * are the finished session rather than an empty box. Only .term__text is
+   * cleared — the prompt beside it holds the line open and output fades instead
+   * of unhiding, so the panel is the same height throughout and never reflows.
    */
   interface Group {
     cmd: HTMLElement;
@@ -182,9 +166,7 @@ const session = [
         }
       };
 
-      // The panel sits below the fold, so starting on load would spend the run
-      // on an empty screen and leave a finished terminal for the reader who
-      // scrolls to it.
+      // Below the fold, so starting on load would run it on an empty screen.
       if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver(
           (entries) => {

@@ -90,11 +90,8 @@
   transition: transform 0.3s var(--ease), background-color 0.2s var(--ease);
 }
 
-/* --sea-ink rather than --sea: these are 15px, so they need 4.5:1, and Snow's
-   --sea measures 4.01:1 against the canvas. --sea-ink is that hue pulled dark
-   enough to clear it (5.6:1), and on Night it aliases straight back to the
-   bright --sea. The rule under the link takes the accent with the label —
-   turquoise text over a text-coloured underline reads as two separate marks. */
+/* --sea-ink, not --sea: at 15px these need 4.5:1 and Snow's --sea gives 4.01:1.
+   The underline takes the accent with the label. */
 .nav__link:hover { opacity: 1; color: var(--sea-ink); }
 .nav__link:hover::after { transform: scaleX(1); background: var(--sea-ink); }
 
@@ -110,12 +107,8 @@
 /* epam.com's CONTACT US: a pill with a gradient edge and no fill. Two
    backgrounds in one box — a flat one clipped to the padding box, the brand
    gradient clipped to the border box — leave the border showing as gradient,
-   which border-color cannot do on its own. */
-/* 2px, not 1: the gradient is the whole of this control — there is no fill
-   behind it — and at a single pixel the three stops had too little width to
-   separate, so the edge read as one flat cyan line at arm's length. Two is
-   where the mint and lilac ends become distinguishable. Three turns the edge
-   into a band and the pill starts to look chunky. */
+   which border-color cannot do on its own. 2px because at one pixel the three
+   stops have too little width to separate. */
 .nav__cta {
   border-radius: 999px;
   border: 2px solid transparent;
@@ -321,17 +314,10 @@
   background: var(--hairline-strong);
 }
 
-/* No ch cap. `ch` is the advance of "0" in whatever font is active when the
-   value resolves, and this page loads Sora with font-display: swap — so 15ch
-   measured 1077px against the system fallback and 773px once Sora arrived, and
-   browsers do not reliably re-resolve it after the swap. The headline set in
-   two lines or three depending on cache and timing, which is why it looked
-   settled in one screenshot and reflowed in the next.
-
-   Nothing is lost by dropping it: "Every enterprise wants" is 1033px at the
-   100px display size and .shell already caps the column at 1052px, so the cap
-   was only ever deciding whether the first line broke — and it decided it
-   differently on every load. */
+/* No ch cap. `ch` measures the active font, and with font-display: swap 15ch
+   resolved to 1077px against the fallback and 773px once Sora arrived — so the
+   headline set in two lines or three depending on cache and timing. Nothing is
+   lost: the first line is 1033px and .shell already caps the column at 1052px. */
 .hero__title { margin-bottom: 2rem; }
 
 .hero__lede { margin-bottom: 2.75rem; }
@@ -343,10 +329,7 @@
   margin-bottom: 3.5rem;
 }
 
-/* The proof row: the session panel and the two figures that belong to it. The
-   headline keeps the full display size above it — the panel sits under the
-   fold line rather than beside the title, so nothing had to be shrunk to make
-   room for the product. */
+/* Under the headline rather than beside it, so the display size is untouched. */
 .hero__proof {
   display: grid;
   grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
@@ -379,9 +362,7 @@
    7a. Terminal panel
    -------------------------------------------------------------------------- */
 
-/* Dark in both themes, like the code section: the token colours below are tuned
-   for a dark ground, and a terminal that stayed light on Snow would read as a
-   quotation rather than as a shell. .panel--dark carries the scope. */
+/* Dark in both themes, like the code panel — .panel--dark carries the scope. */
 .term {
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
@@ -405,8 +386,7 @@
   background: var(--hairline-strong);
 }
 
-/* --muted, not --faint: --faint measures 3.19:1 on the panel's title bar, and
-   this is 12px. */
+/* --muted: --faint measures 3.19:1 here, and this is 12px. */
 .term__path {
   margin-left: 0.6rem;
   font-family: var(--mono);
@@ -414,8 +394,7 @@
   color: var(--muted);
 }
 
-/* Each command and each output line is its own block, so the panel needs no
-   hand-placed newlines and the lines can be coloured apart. */
+/* One block per line, so no hand-placed newlines and each can be coloured. */
 .term__body {
   display: flex;
   flex-direction: column;
@@ -430,14 +409,11 @@
 .term__prompt { color: var(--sea); margin-right: 0.5rem; }
 .term__out { color: var(--muted); white-space: pre; }
 
-/* Both fade rather than unhide: opacity leaves the box in flow, so the panel is
-   the same height before the run as after it and the hero never reflows. */
+/* Fade, not unhide: opacity keeps the box in flow, so the panel never resizes. */
 .term__cmd,
 .term__out { transition: opacity 0.25s var(--ease); }
 
-/* The caret that follows the characters being typed. It belongs to the line
-   rather than the panel, so it sits at the end of the text wherever that has
-   reached, and it is gone the moment the line finishes. */
+/* Belongs to the line, so it follows the characters and leaves when they end. */
 .term__text.is-typing::after {
   content: '';
   display: inline-block;
@@ -449,9 +425,8 @@
   animation: termCaret 1s steps(1, end) infinite;
 }
 
-/* The resting caret, once the session has finished. Hidden by the script while
-   the run is going so there is never a second caret on screen; left visible
-   without JavaScript, where the panel is simply the finished session. */
+/* The resting caret. Hidden by the script during the run so there is never a
+   second one on screen; visible without JavaScript. */
 .term__caret {
   width: 0.5rem;
   height: 1.05em;
@@ -461,8 +436,7 @@
 
 .term__caret.is-on { animation: termCaret 1s steps(1, end) infinite; }
 
-/* Ends opaque on purpose: a11y.css clamps every animation to one 0.01ms
-   iteration under prefers-reduced-motion, which lands on the last keyframe. */
+/* Ends opaque: a11y.css clamps animations to one 0.01ms iteration, landing here. */
 @keyframes termCaret {
   0%, 45%   { opacity: 1; }
   50%, 95%  { opacity: 0; }
@@ -470,8 +444,7 @@
 }
 
 @media (max-width: 1080px) {
-  /* Below the two-column split the figures lie back down beside each other
-     rather than stacking into a tall column under a full-width panel. */
+  /* Figures side by side rather than stacked under a full-width panel. */
   .hero__proof { grid-template-columns: 1fr; gap: 2rem; }
   .hero__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
 }
@@ -480,8 +453,7 @@
   .term__body { font-size: 0.75rem; }
 }
 
-/* The rule between each badge wraps with it, and on a narrow screen that left a
-   dash hanging at the end of the first line. */
+/* The rule wraps with the badge, leaving a dash hanging at the line end. */
 @media (max-width: 560px) {
   .hero__meta { gap: 0.4rem 1rem; }
   .hero__meta span:not(:last-child)::after { display: none; }
@@ -500,11 +472,8 @@
    8. Video
    -------------------------------------------------------------------------- */
 
-/* Narrower than the shell. The poster is a mid-film frame whose right third is
-   empty canvas, and at the full 1050px that emptiness was the largest single
-   area on the page — the section spent a whole screen presenting one play
-   button. Centred at 54rem the frame reads as a film still rather than as a
-   panel that failed to load. */
+/* Narrower than the shell: the poster's right third is empty canvas, and at
+   1050px that emptiness was the largest single area on the page. */
 .video__frame {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -934,9 +903,8 @@
 
 /* Recessive by design: solid hairlines one shade off the surface, never
    dashed — a dashed rule reads as a threshold when it is only a grid. */
-/* Inset from the first and last row's outer edge: run to the full height of the
-   plot the lines close the rows into a boxed table, and at ten rows that box
-   was reading as a rendering artefact rather than as a scale. */
+/* Inset from the outer rows: at full height the lines closed the plot into a
+   box that read as a rendering artefact rather than a scale. */
 .bars__grid {
   position: absolute;
   top: 0.4rem;
@@ -1190,11 +1158,8 @@
   background: var(--surface);
 }
 
-/* Along the panel it was a 470px column of rotated 13px type beside the run —
-   the one line on the page a reader has to tilt their head for, carrying the
-   one fact that says a human approves the work. It reads across, under the run
-   it gates. Ordinary block flow, never a flex or grid item: as one, the
-   <strong> shrinks and the words stack one per line. */
+/* Was a 470px column of rotated 13px type. Ordinary block flow, never a flex or
+   grid item: as one, the <strong> shrinks and the words stack one per line. */
 .flow__human {
   font-size: 0.875rem;
   color: var(--muted);
@@ -1361,8 +1326,7 @@
 }
 .path:focus-within .textlink { border-color: var(--text); }
 
-/* --faint is decoration contrast — 3.4:1 on Night and under 3:1 on Snow — and
-   these are the labels that number the four adoption paths. */
+/* --faint is decoration contrast: 3.4:1 on Night, under 3:1 on Snow. */
 .path__index {
   font-family: var(--mono);
   font-size: 0.75rem;
@@ -1605,11 +1569,8 @@
 
 .close { position: relative; overflow: hidden; }
 
-/* A radial stop rather than a blurred circle. filter: blur(130px) on a 640px
-   box makes the compositor rasterise and blur that surface again on every frame
-   it scrolls through; a radial-gradient paints the identical falloff once, as
-   part of the background. Same bloom, none of the per-frame cost — and it is
-   the same technique the hero blooms already use. */
+/* A radial stop, not filter: blur(130px) on a 640px box — that re-blurs the
+   surface on every frame it scrolls through. Same falloff, painted once. */
 .close__glow {
   position: absolute;
   width: 40rem; height: 40rem;
@@ -1741,8 +1702,7 @@
   color: var(--muted);
 }
 
-/* Quieter than the copyright it follows, and its own line once the footer is
-   narrow — the two are separate statements, not one run-on sentence. */
+/* Its own line once the footer is narrow — two statements, not a run-on. */
 .footer__updated {
   color: var(--faint);
   margin-left: 0.5rem;

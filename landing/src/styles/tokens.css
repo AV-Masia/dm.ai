@@ -26,14 +26,9 @@
    -------------------------------------------------------------------------- */
 
 :root {
-  /* Snow — default.
-
-     #FBFAFA and #060606 are not chosen here: they are the canvas and ink EPAM
-     serves on its own properties (anywhere.epam.com computes to exactly these),
-     so the pair is fixed. An earlier pass darkened the canvas to separate the
-     white cards from it and drifted off-brand for a problem the hairline should
-     solve — the cards get their edge from --hairline at 16%, not from the
-     ground moving. */
+  /* Snow — default. #FBFAFA and #060606 are what EPAM serves on its own
+     properties, so the pair is fixed; the cards get their edge from --hairline
+     at 16% rather than from moving the ground. */
   --canvas:      #FBFAFA;
   --surface:     #FFFFFF;
   --surface-alt: #EFEEEC;
@@ -58,23 +53,16 @@
      eyebrows are 11px and the step numbers 11px on a fill, both of which need
      4.5:1; --sea measures 4.01:1 against the canvas, just under. Same hue and
      saturation, darker. Night's --sea is already 15:1 there and aliases back. */
-  /* Re-tuned when the alternating band arrived. #00798F cleared 4.5:1 on the
-     #FBFAFA canvas with nothing to spare, and a tinted band puts the same 11px
-     eyebrow on #F0EFED, where it measured 4.42:1. This clears both — 5.6:1 on
-     the canvas, 5.0:1 in a band — and it is still the fill the step numbers sit
-     on, where Snow's canvas reads 5.8:1 on top of it. */
+  /* Clears 4.5:1 on both grounds the 11px eyebrow sits on: 5.6:1 on the canvas,
+     5.0:1 in a tinted band. The previous #00798F measured 4.42:1 in a band. */
   --sea-ink: #00707F;
 
-  /* Built from the four accent tokens rather than written out, which is what
-     lets the two always-dark scopes (.panel--dark and .footer) restate those
-     tokens and get the Night sweep on a light page for free.
+  /* Built from the accent tokens so .panel--dark and .footer, which stay dark on
+     a light page, get the Night sweep by restating those tokens.
 
-     The stops are epam.com's, read off the homepage headline: it paints
-     `linear-gradient(to left, #B896FF 31px, #00F6FF 86.8px, #00FFF0 100%)` —
-     mint into cyan into lilac, left to right, with no blue between them. Their
-     product sites do route through blue (#1EA1E4 on solutionshub, #0047FF on
-     anywhere), but the headline treatment this page copies is the homepage one.
-     Do not "correct" the missing blue stop: it is absent on purpose. */
+     The stops are epam.com's homepage headline — mint into cyan into lilac, no
+     blue between them. Their product sites do route through blue; the headline
+     treatment this page copies does not. The missing blue stop is deliberate. */
   --grad: linear-gradient(96deg, var(--mint) 0%, var(--sea) 46%, var(--lilac) 100%);
 
   /* The filled button needs its own stops on Snow. The accents above are tuned
