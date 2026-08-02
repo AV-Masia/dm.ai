@@ -321,7 +321,18 @@
   background: var(--hairline-strong);
 }
 
-.hero__title { margin-bottom: 2rem; max-width: 15ch; }
+/* No ch cap. `ch` is the advance of "0" in whatever font is active when the
+   value resolves, and this page loads Sora with font-display: swap — so 15ch
+   measured 1077px against the system fallback and 773px once Sora arrived, and
+   browsers do not reliably re-resolve it after the swap. The headline set in
+   two lines or three depending on cache and timing, which is why it looked
+   settled in one screenshot and reflowed in the next.
+
+   Nothing is lost by dropping it: "Every enterprise wants" is 1033px at the
+   100px display size and .shell already caps the column at 1052px, so the cap
+   was only ever deciding whether the first line broke — and it decided it
+   differently on every load. */
+.hero__title { margin-bottom: 2rem; }
 
 .hero__lede { margin-bottom: 2.75rem; }
 
@@ -434,7 +445,6 @@
 }
 
 @media (max-width: 720px) {
-  .hero__title { max-width: none; }
   .term__body { font-size: 0.75rem; }
 }
 

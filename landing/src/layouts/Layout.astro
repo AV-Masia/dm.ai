@@ -94,7 +94,13 @@ const schemas = [
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100;200;300;400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Sora as a range, not a list of seven instances. Google Fonts serves the
+       same two woff2 files either way — Sora is variable, and the discrete
+       request only wrapped those files in fourteen @font-face rules with the
+       weight pinned. Asking for the axis costs nothing (33,652 bytes for latin
+       in both cases), shrinks this render-blocking stylesheet from 5,726 to 826
+       bytes, and makes every weight between 100 and 800 available rather than
+       the seven that happened to be listed. --><link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <!-- is:inline is load-bearing: a script Astro processes is deferred, which
        would let the wrong theme paint first. Night is the default rather than

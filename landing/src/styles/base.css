@@ -152,10 +152,12 @@ h3 { font-weight: 300; }
    the colour can appear. At Sora 100 there was not enough of it to carry three
    stops, and the mint and violet ends washed out to a flat pale blue.
 
-   700 is already in the family requested in Layout.astro — no extra font file —
-   and the hero still sets in two lines with "AI factory" unbroken. */
+   650 rather than the 700 epam.com declares: Sora is a heavier face than the
+   grotesque they set it in, so the same number reads a step blacker here. It is
+   an off-axis value only because Layout.astro now asks for the weight axis
+   instead of seven fixed instances — same font file, so it costs nothing. */
 h1 .accent,
-h2 .accent { font-weight: 700; }
+h2 .accent { font-weight: 650; }
 
 /* Bold, the phrase is wide enough to break across lines on a phone, and the
    gradient reads as two half-sweeps when it does — the hero split into "wants
