@@ -35,8 +35,11 @@ export const lastModified = '2026-08-02';
  */
 export const organization = {
   name: 'EPAM Systems',
+  legalName: 'EPAM Systems, Inc.',
+  alternateName: 'EPAM',
+  description:
+    'EPAM Systems is a global software engineering and consulting company, and the publisher of DMTools.',
   url: 'https://www.epam.com',
-  wikidata: 'https://www.wikidata.org/wiki/Q1275613',
   sameAs: [
     'https://www.wikidata.org/wiki/Q1275613',
     'https://www.linkedin.com/company/epam-systems',
@@ -65,6 +68,13 @@ export const meta = {
   themeColor: '#060606',
   ogImage: 'assets/og-cover.png',
   favicon: 'assets/favicon.svg',
+  /**
+   * The DMT mark as the structured data sees it. A raster twin of favicon.svg
+   * rather than a second design: Google accepts BMP, GIF, JPEG, PNG and WebP
+   * for the image fields, not SVG, so the vector alone would be skipped.
+   * Regenerate both together or the tab icon and the schema will disagree.
+   */
+  mark: 'assets/dmt-mark.png',
 } as const;
 
 /** softwareVersion tracks gradle.properties — the one field that goes stale silently. */
@@ -326,8 +336,6 @@ export const verifyCommand = 'dmtools list';
 export interface FaqEntry {
   question: string;
   answer: string;
-  /** Opens the section on the definitional answer rather than a wall of closed rows. */
-  open?: boolean;
 }
 
 /**
@@ -338,44 +346,43 @@ export interface FaqEntry {
  */
 export const faq: FaqEntry[] = [
   {
-    question: 'What is DMTools?',
+    question: 'What is DMTools, exactly?',
     answer:
-      'DMTools is an open-source command-line orchestrator that connects AI agents to enterprise delivery systems. It exposes 320+ tools across 20+ integrations — Jira, Azure DevOps, GitHub, GitLab, Confluence, Figma, Microsoft Teams and every major AI provider — behind a single CLI. DMTools is built and maintained by EPAM Systems and released under the Apache 2.0 licence.',
-    open: true,
+      'DMTools is an open-source command-line orchestrator that puts AI agents to work inside enterprise delivery systems. One CLI carries 320+ tools across 20+ integrations — Jira, Azure DevOps, GitHub, GitLab, Confluence, Figma, Microsoft Teams and every major AI provider. EPAM Systems builds and maintains DMTools, and ships it under the Apache 2.0 licence.',
   },
   {
-    question: 'Is our data sent to EPAM or to a DMTools service?',
+    question: 'Where does our data actually go?',
     answer:
-      'No. DMTools is a CLI you run inside your own CI pipeline or on your own machine, with your own credentials and your own choice of AI provider. There is no DMTools-operated backend in between, and no telemetry path back to EPAM.',
+      'DMTools sends nothing to EPAM and talks to no hosted service of its own. The CLI runs inside your own CI pipeline or on your own machine, under your credentials, against the AI provider you picked. Nothing sits in the middle, and there is no telemetry path home.',
   },
   {
-    question: 'Do I need to be a developer to benefit from DMTools?',
+    question: 'Does the whole team have to be technical?',
     answer:
-      'No. One technical teammate installs and configures DMTools once per project — Java 17 or newer plus a set of environment variables. After that the output reaches delivery managers, QA and platform teams as processed tickets, drafted pull requests and generated reports, not as a tool anyone has to operate.',
+      'DMTools needs one technical teammate, once. That person installs and configures it per project — Java 17 or newer plus a set of environment variables. From then on delivery managers, QA and platform teams meet the output rather than the tool: processed tickets, drafted pull requests, generated reports.',
   },
   {
-    question: 'What happens if the AI gets something wrong?',
+    question: 'What if the model gets something wrong?',
     answer:
-      'Nothing merges on its own. Every branch and pull request DMTools produces stops for human review before it ships — the model drafts the work, your engineers approve and merge it. Because each run installs fresh and leaves its trail in CI, a wrong answer is auditable rather than mysterious.',
+      'DMTools merges nothing on its own. Every branch and pull request it opens waits for human review before it ships — the model drafts the work, your engineers approve it. And because each run installs fresh and leaves its trail in CI, a wrong answer is something you can audit rather than puzzle over.',
   },
   {
-    question: 'Does DMTools only work with GitHub?',
+    question: 'Is this a GitHub-only tool?',
     answer:
-      'No. DMTools integrates with Jira, Azure DevOps, GitHub, GitLab, Bitbucket, Confluence, SharePoint, Figma, Microsoft Teams, TestRail, Jenkins and Bitrise — more than twenty systems in total. GitHub is one of them, not a requirement.',
+      'DMTools reaches more than twenty systems, and GitHub is only one of them. The list runs Jira, Azure DevOps, GitHub, GitLab, Bitbucket, Confluence, SharePoint, Figma, Microsoft Teams, TestRail, Jenkins and Bitrise. None of them is a prerequisite for the rest.',
   },
   {
-    question: 'Which AI providers can we use?',
+    question: 'Which AI provider does this lock us into?',
     answer:
-      'DMTools supports Anthropic Claude, OpenAI, Google Gemini, Google Vertex AI, AWS Bedrock, the EPAM DIAL enterprise gateway, and fully local models through Ollama when code and tickets must never leave your network. The provider is chosen at runtime through environment variables, so switching takes no code change.',
+      'DMTools locks you into none of them. It speaks to Anthropic Claude, OpenAI, Google Gemini, Google Vertex AI, AWS Bedrock, the EPAM DIAL enterprise gateway, and fully local models through Ollama for when code and tickets must never leave your network. The choice is an environment variable read at runtime, so switching costs no code change.',
   },
   {
-    question: 'What does DMTools cost?',
+    question: 'Is there a paid tier?',
     answer:
-      'DMTools itself is free and open source under Apache 2.0 — no account, no licence key, no paid tier. You pay only the AI provider and the delivery tools your organisation already uses.',
+      'DMTools has no paid tier. The software is Apache 2.0 — no account, no licence key, nothing to buy. Your only bills are the AI provider you chose and the delivery tools your organisation already pays for.',
   },
   {
-    question: 'How is DMTools different from a single MCP server?',
+    question: 'Why not just run an MCP server instead?',
     answer:
-      'A typical MCP server wraps one system; DMTools covers more than twenty behind one install, and exposes them four ways — direct CLI calls, MCP for assistants such as Claude and Cursor, plain JavaScript functions inside jobs, and CI pipelines. Every tool is generated from annotated Java at compile time, so the CLI surface, the MCP schema and the JavaScript functions cannot drift apart.',
+      'DMTools covers in one install what would otherwise be twenty-odd separate MCP servers, since a typical one wraps a single system. It then exposes all of that four ways — direct CLI calls, MCP for assistants such as Claude and Cursor, plain JavaScript functions inside jobs, and CI pipelines. Every tool is generated from annotated Java at compile time, so the CLI surface, the MCP schema and the JavaScript functions cannot drift apart.',
   },
 ];

@@ -7,6 +7,9 @@ import { faq } from '../data/content';
  * behaviour come free, it works with JavaScript off, and the answers stay in
  * the markup where assistants read them even while collapsed. <summary> may
  * hold one heading, so the +/x marker is drawn by CSS, not added as a child.
+ *
+ * Every row ships closed. No `open` attribute anywhere, so the section loads as
+ * a list of questions and each answer costs a click.
  */
 ---
 
@@ -24,7 +27,7 @@ import { faq } from '../data/content';
 
     <div class="faq">
       {faq.map((entry) => (
-        <details class="faq__item reveal" open={entry.open}>
+        <details class="faq__item reveal">
           <summary class="faq__sum"><h3 class="faq__q">{entry.question}</h3></summary>
           <p class="faq__a">{entry.answer}</p>
         </details>

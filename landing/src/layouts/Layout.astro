@@ -42,6 +42,9 @@ const graph = [
     '@type': 'Organization',
     '@id': ids.org,
     name: organization.name,
+    legalName: organization.legalName,
+    alternateName: organization.alternateName,
+    description: organization.description,
     url: organization.url,
     sameAs: organization.sameAs,
   },
@@ -75,6 +78,10 @@ const graph = [
     description: software.description,
     url: canonical,
     codeRepository: REPO,
+    // The product's own mark. It stays off the Organization node on purpose:
+    // that node is EPAM, and `logo` there would claim DMT is the company's
+    // logo rather than this application's.
+    image: absolute(meta.mark),
     license: 'https://www.apache.org/licenses/LICENSE-2.0',
     softwareVersion: software.version,
     softwareRequirements: software.requirements,

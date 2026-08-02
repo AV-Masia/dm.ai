@@ -1,18 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="DMTools">
-  <defs>
-    <linearGradient id="dm" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#00FFF0"/>
-      <stop offset="0.5" stop-color="#00F6FF"/>
-      <stop offset="1" stop-color="#B896FF"/>
-    </linearGradient>
-  </defs>
-
   <rect width="64" height="64" rx="12" fill="#060606"/>
 
-  <!-- Isometric container: one box holding every connected system.
-       Stroke kept at 4 so the wireframe still resolves at 16px. -->
-  <g fill="none" stroke="url(#dm)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M32 11 13 21v22l19 10 19-10V21L32 11Z"/>
-    <path d="M13 21l19 10 19-10M32 31v22"/>
+  <!-- DMT as strokes, not <text>: a favicon is often rasterised without access
+       to any font, so letterforms have to be geometry. Stroke kept at 4, the
+       weight the previous mark used to stay readable when this is drawn at 16px.
+       Colour is the Sea accent token, #00F6FF, rather than a literal cyan
+       picked by eye, so the tab icon and the page agree. -->
+  <g fill="none" stroke="#00F6FF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 20h5a7 12 0 0 1 0 24H8V20Z"/>
+    <path d="M26 44V20l7 12 7-12v24"/>
+    <path d="M46 20h10M51 20v24"/>
   </g>
 </svg>

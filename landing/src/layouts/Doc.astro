@@ -50,7 +50,15 @@ const schema = {
       url: canonical,
       isPartOf: { '@id': `${siteHome}#website` },
       about: { '@id': `${siteHome}#dmtools` },
-      publisher: { '@type': 'Organization', name: organization.name, url: organization.url },
+      // The same @id the home page mints for the publisher. Without it this is
+      // an anonymous second Organization, so the sameAs links that identify
+      // EPAM never reach the docs pages; with it, the two merge into one entity.
+      publisher: {
+        '@type': 'Organization',
+        '@id': `${siteHome}#organization`,
+        name: organization.name,
+        url: organization.url,
+      },
     },
     {
       '@type': 'BreadcrumbList',
