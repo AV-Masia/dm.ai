@@ -430,11 +430,43 @@
 .term__prompt { color: var(--sea); margin-right: 0.5rem; }
 .term__out { color: var(--muted); white-space: pre; }
 
+/* Both fade rather than unhide: opacity leaves the box in flow, so the panel is
+   the same height before the run as after it and the hero never reflows. */
+.term__cmd,
+.term__out { transition: opacity 0.25s var(--ease); }
+
+/* The caret that follows the characters being typed. It belongs to the line
+   rather than the panel, so it sits at the end of the text wherever that has
+   reached, and it is gone the moment the line finishes. */
+.term__text.is-typing::after {
+  content: '';
+  display: inline-block;
+  width: 0.5em;
+  height: 1.05em;
+  margin-left: 1px;
+  vertical-align: -0.18em;
+  background: var(--sea);
+  animation: termCaret 1s steps(1, end) infinite;
+}
+
+/* The resting caret, once the session has finished. Hidden by the script while
+   the run is going so there is never a second caret on screen; left visible
+   without JavaScript, where the panel is simply the finished session. */
 .term__caret {
   width: 0.5rem;
   height: 1.05em;
   margin-top: 0.5rem;
   background: var(--sea);
+}
+
+.term__caret.is-on { animation: termCaret 1s steps(1, end) infinite; }
+
+/* Ends opaque on purpose: a11y.css clamps every animation to one 0.01ms
+   iteration under prefers-reduced-motion, which lands on the last keyframe. */
+@keyframes termCaret {
+  0%, 45%   { opacity: 1; }
+  50%, 95%  { opacity: 0; }
+  100%      { opacity: 1; }
 }
 
 @media (max-width: 1080px) {

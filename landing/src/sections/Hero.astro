@@ -83,9 +83,9 @@ const session = [
           <span class="term__dot"></span>
           <span class="term__path">~ / your-project</span>
         </div>
-        <pre class="term__body">{session.map((line) => (
+        <pre class="term__body" id="hero-term">{session.map((line) => (
           <>
-            <span class="term__cmd"><span class="term__prompt">$</span> {line.cmd}</span>
+            <span class="term__cmd"><span class="term__prompt">$</span> <span class="term__text">{line.cmd}</span></span>
             {line.out.map((out) => <span class="term__out">{out}</span>)}
           </>
         ))}<span class="term__caret" aria-hidden="true"></span></pre>
@@ -102,3 +102,104 @@ const session = [
     </div>
   </div>
 </section>
+
+<script>
+  import { prefersReducedMotion } from '../scripts/shared';
+
+  /**
+   * The session types itself out once, when the panel reaches the reader.
+   *
+   * It runs off the rendered markup rather than a copy of the data: the text is
+   * read out of the DOM and put back a character at a time, so the panel that
+   * ships without JavaScript — and the one a reduced-motion reader gets — is the
+   * finished session, not an empty box waiting for a script.
+   *
+   * Nothing is emptied that holds the layout open. Only .term__text is cleared,
+   * and the prompt beside it keeps the line at full height; the output lines
+   * fade rather than unhide. The panel is therefore the same height before,
+   * during and after the run, and the hero never reflows under the reader.
+   */
+  interface Group {
+    cmd: HTMLElement;
+    text: HTMLElement;
+    out: HTMLElement[];
+  }
+
+  const term = document.getElementById('hero-term');
+
+  if (term && !prefersReducedMotion) {
+    const caret = term.querySelector<HTMLElement>('.term__caret');
+    const groups: Group[] = [];
+
+    term.querySelectorAll<HTMLElement>('.term__cmd, .term__out').forEach((el) => {
+      if (el.classList.contains('term__cmd')) {
+        const text = el.querySelector<HTMLElement>('.term__text');
+        if (text) groups.push({ cmd: el, text, out: [] });
+      } else if (groups.length) {
+        groups[groups.length - 1].out.push(el);
+      }
+    });
+
+    if (groups.length) {
+      const script = groups.map((g) => g.text.textContent ?? '');
+
+      groups.forEach((g) => {
+        g.cmd.style.opacity = '0';
+        g.text.textContent = '';
+        g.out.forEach((o) => { o.style.opacity = '0'; });
+      });
+      if (caret) caret.style.opacity = '0';
+
+      const wait = (ms: number) => new Promise<void>((r) => { setTimeout(r, ms); });
+
+      const play = async (): Promise<void> => {
+        for (let i = 0; i < groups.length; i += 1) {
+          const g = groups[i];
+          const full = script[i];
+
+          g.cmd.style.opacity = '1';
+          g.text.classList.add('is-typing');
+
+          for (let c = 1; c <= full.length; c += 1) {
+            g.text.textContent = full.slice(0, c);
+            await wait(22);
+          }
+
+          g.text.classList.remove('is-typing');
+          await wait(220);
+
+          for (const line of g.out) {
+            line.style.opacity = '1';
+            await wait(55);
+          }
+
+          await wait(360);
+        }
+
+        if (caret) {
+          caret.style.opacity = '1';
+          caret.classList.add('is-on');
+        }
+      };
+
+      // The panel sits below the fold, so starting on load would spend the run
+      // on an empty screen and leave a finished terminal for the reader who
+      // scrolls to it.
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              observer.disconnect();
+              void play();
+            });
+          },
+          { threshold: 0.35 },
+        );
+        observer.observe(term);
+      } else {
+        void play();
+      }
+    }
+  }
+</script>
