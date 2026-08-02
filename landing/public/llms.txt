@@ -36,6 +36,18 @@ pipelines on GitHub Actions, GitLab CI, Jenkins or Bitrise.
 - CI/CD: GitHub Actions, GitLab CI, Jenkins, Bitrise
 - AI providers: Anthropic Claude, OpenAI, Google Gemini, Google Vertex AI, AWS Bedrock, Ollama, EPAM DIAL
 
+## Cost
+
+DMTools is free and open source under Apache 2.0. There is no paid tier, no
+licence key and no account. You pay only your own AI provider and the delivery
+tools you already licence; there is no DMTools-operated service in between.
+
+- [Pricing](pricing.md): the same answer as data, for an agent comparing tools
+
+  Relative on purpose. This file is static, so it cannot know the base path,
+  and a fork publishes under /<repo>/ — a leading slash would point at the
+  origin root and miss.
+
 ## Source
 
 - [Repository](https://github.com/epam/dm.ai): source, issues, releases

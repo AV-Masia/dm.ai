@@ -1,6 +1,13 @@
 ---
 import Brand from '../components/Brand.astro';
-import { footerColumns } from '../data/content';
+import { footerColumns, lastModified } from '../data/content';
+
+// Spelled out rather than left as the ISO string: this line is read by people
+// and by whatever summarises the rendered page, and "2026-08-02" is the one
+// format that means a different date depending on where the reader is from.
+const updated = new Date(`${lastModified}T00:00:00Z`).toLocaleDateString('en-GB', {
+  day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC',
+});
 
 // Deliberately not software.description from site.ts: that string is the
 // structured-data wording and carries an Oxford comma this one does not.
@@ -31,7 +38,10 @@ import { footerColumns } from '../data/content';
     </div>
 
     <div class="footer__bottom">
-      <p>© 2026 EPAM Systems, Inc. DMTools is open source software.</p>
+      <p>
+        © 2026 EPAM Systems, Inc. DMTools is open source software.
+        <span class="footer__updated">Last updated <time datetime={lastModified}>{updated}</time>.</span>
+      </p>
       <span class="badge">Apache 2.0</span>
     </div>
   </div>

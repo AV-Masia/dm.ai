@@ -9,6 +9,7 @@ import '../styles/a11y.css';
 
 import {
   meta, film, filmEmbedUrl, filmWatchUrl, software, faq, asset, basePath, REPO,
+  organization, installTabs, verifyCommand, lastModified,
 } from '../data/content';
 
 const canonical = new URL(basePath, Astro.site).href;
@@ -21,10 +22,58 @@ const ogImage = absolute(meta.ogImage);
 // tracking. A GA4 id is public once served, so it is a variable, not a secret.
 const gaId = process.env.GA_MEASUREMENT_ID;
 
-const schemas = [
+/**
+ * One @graph rather than three separate blocks.
+ *
+ * The three used to sit side by side as unrelated islands: a parser could read
+ * that the page describes some software, that it holds a video, and that it
+ * answers eight questions, without anything saying those are the same subject.
+ * Nodes carry an @id and reference each other, so what an assistant extracts is
+ * a product with a publisher, a film and an FAQ attached — one entity, not
+ * three findings that happen to share a URL.
+ */
+const ids = {
+  org: `${canonical}#organization`,
+  site: `${canonical}#website`,
+  app: `${canonical}#dmtools`,
+  page: `${canonical}#webpage`,
+  video: `${canonical}#film`,
+  faq: `${canonical}#faq`,
+  install: `${canonical}#install`,
+};
+
+const graph = [
   {
-    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': ids.org,
+    name: organization.name,
+    url: organization.url,
+    sameAs: organization.sameAs,
+  },
+  {
+    '@type': 'WebSite',
+    '@id': ids.site,
+    url: canonical,
+    name: meta.siteName,
+    inLanguage: meta.lang,
+    publisher: { '@id': ids.org },
+  },
+  {
+    '@type': 'WebPage',
+    '@id': ids.page,
+    url: canonical,
+    name: meta.title,
+    description: meta.description,
+    inLanguage: meta.lang,
+    dateModified: lastModified,
+    isPartOf: { '@id': ids.site },
+    about: { '@id': ids.app },
+    publisher: { '@id': ids.org },
+    primaryImageOfPage: ogImage,
+  },
+  {
     '@type': 'SoftwareApplication',
+    '@id': ids.app,
     name: 'DMTools',
     applicationCategory: 'DeveloperApplication',
     operatingSystem: software.operatingSystem,
@@ -37,24 +86,65 @@ const schemas = [
     downloadUrl: `${REPO}/releases/latest`,
     screenshot: ogImage,
     isAccessibleForFree: true,
+    dateModified: lastModified,
     featureList: software.features,
-    author: { '@type': 'Organization', name: 'EPAM Systems', url: 'https://www.epam.com' },
+    author: { '@id': ids.org },
+    publisher: { '@id': ids.org },
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
   },
   {
-    '@context': 'https://schema.org',
     '@type': 'VideoObject',
+    '@id': ids.video,
     name: film.name,
     uploadDate: film.uploadDate,
     description: film.description,
     thumbnailUrl: absolute(film.poster),
     embedUrl: filmEmbedUrl,
     contentUrl: filmWatchUrl,
+    about: { '@id': ids.app },
     publisher: { '@type': 'Organization', name: film.publisher.name, url: film.publisher.url },
   },
+  /**
+   * The install section as a procedure. Google retired HowTo *rich results* in
+   * 2023, so this earns nothing in the blue links — it is here because the
+   * question an assistant gets asked is "how do I install DMTools", and the
+   * answer is three platform variants plus a verification step. Built from
+   * installTabs and verifyCommand so the steps cannot contradict the tabs the
+   * page actually renders.
+   */
   {
-    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    '@id': ids.install,
+    name: 'Install DMTools',
+    description:
+      'Install the DMTools CLI on Linux, macOS or Windows. No account and no licence key; Java 17 or newer is the only requirement.',
+    totalTime: 'PT2M',
+    about: { '@id': ids.app },
+    supply: { '@type': 'HowToSupply', name: software.requirements },
+    step: [
+      // The label verbatim, not "Install on {label}": the three tabs are two
+      // platforms and a delivery mode, so that phrasing produced "Install on
+      // Agent skill". The hint carries the requirement and is the half a reader
+      // actually needs, so it goes in with the command — with its markup
+      // stripped, since this is a plain-text field.
+      ...installTabs.map((tab, i) => ({
+        '@type': 'HowToStep',
+        position: i + 1,
+        name: tab.label,
+        text: `${tab.command} — ${tab.hint.replace(/<[^>]+>/g, '')}`,
+      })),
+      {
+        '@type': 'HowToStep',
+        position: installTabs.length + 1,
+        name: 'Verify the install',
+        text: `Run ${verifyCommand} to print every tool the CLI can reach.`,
+      },
+    ],
+  },
+  {
     '@type': 'FAQPage',
+    '@id': ids.faq,
+    about: { '@id': ids.app },
     mainEntity: faq.map((entry) => ({
       '@type': 'Question',
       name: entry.question,
@@ -62,6 +152,8 @@ const schemas = [
     })),
   },
 ];
+
+const schemas = [{ '@context': 'https://schema.org', '@graph': graph }];
 ---
 
 <!DOCTYPE html>

@@ -1741,6 +1741,17 @@
   color: var(--muted);
 }
 
+/* Quieter than the copyright it follows, and its own line once the footer is
+   narrow — the two are separate statements, not one run-on sentence. */
+.footer__updated {
+  color: var(--faint);
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 560px) {
+  .footer__updated { display: block; margin-left: 0; margin-top: 0.35rem; }
+}
+
 .badge {
   padding: 0.3rem 0.7rem;
   border: 1px solid var(--hairline);

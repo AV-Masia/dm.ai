@@ -19,8 +19,38 @@ export const REPO = 'https://github.com/epam/dm.ai';
 export const DOCS = `${REPO}/tree/main/dmtools-ai-docs`;
 const RELEASE = `${REPO}/releases/latest/download`;
 
-/** The date sitemap.xml reports. Bump it when the page's content changes. */
-export const lastModified = '2026-08-01';
+/**
+ * The date sitemap.xml reports, the `dateModified` in the structured data, and
+ * the line printed in the footer. Bump it when the page's content changes.
+ *
+ * It is stated in all three places because assistants weight recency and each
+ * reads a different one: a crawler takes the sitemap, a parser takes the
+ * schema, and a model summarising the rendered page takes the visible line.
+ */
+export const lastModified = '2026-08-02';
+
+/**
+ * The publisher as an entity rather than a name.
+ *
+ * `sameAs` is what lets an assistant tie this page to the company it already
+ * knows about instead of treating "EPAM" as a new string. Every URL here was
+ * checked to resolve, and the set is deliberately short: EPAM Systems has no
+ * English Wikipedia article — the `EPAM` article is a psychological learning
+ * model, a different subject entirely — so the Wikidata item carries the
+ * identity instead. Do not add a Wikipedia link without checking which EPAM it
+ * points at.
+ */
+export const organization = {
+  name: 'EPAM Systems',
+  url: 'https://www.epam.com',
+  wikidata: 'https://www.wikidata.org/wiki/Q1275613',
+  sameAs: [
+    'https://www.wikidata.org/wiki/Q1275613',
+    'https://www.linkedin.com/company/epam-systems',
+    'https://github.com/epam',
+    'https://solutionshub.epam.com',
+  ],
+} as const;
 
 // ---------------------------------------------------------------- head ----
 
