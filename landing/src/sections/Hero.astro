@@ -3,12 +3,45 @@ import PlayIcon from '../components/PlayIcon.astro';
 
 const badges = ['EPAM Open Source', 'Apache 2.0', 'Java 17+'];
 
-/** `countTo` animates from zero when the row is revealed; a plain value does not. */
+/**
+ * The hero used to close on four counted figures, three of which the Numbers
+ * section counts again four screens later — the same claim twice reads as
+ * having nothing else to say. The two that only ever appeared here stay; the
+ * tool and integration counts moved into the panel beside them, where the CLI
+ * prints them rather than the page asserting them.
+ */
 const stats = [
-  { countTo: 320, suffix: '+', label: 'CLI tools, callable as plain JavaScript functions' },
-  { countTo: 20, suffix: '+', label: 'Production-ready system integrations' },
   { value: '4', label: 'Adoption paths, each valuable on its own' },
   { value: '0', label: 'Servers to run or agents to babysit' },
+];
+
+/**
+ * A real session, not a mock-up: every command is a CLI entry point that ships
+ * — `list`, a direct MCP tool call, and a job run — so the panel demonstrates
+ * the claim the headline makes instead of illustrating it. The page had no
+ * product in frame until the code section, eight screens down.
+ */
+const session = [
+  {
+    cmd: 'dmtools list',
+    out: ['320 tools across 20 integrations'],
+  },
+  {
+    cmd: 'dmtools jira_get_ticket DMT-482',
+    out: [
+      '{ "key":     "DMT-482",',
+      '  "summary": "Add TestRail sync",',
+      '  "status":  "In Progress" }',
+    ],
+  },
+  {
+    cmd: 'dmtools run agents/story_development.json',
+    out: [
+      'context   ticket · wiki · repository',
+      'model     anthropic_ai_chat',
+      'publish   branch → pull request',
+    ],
+  },
 ];
 ---
 
@@ -39,17 +72,33 @@ const stats = [
       </a>
     </div>
 
-    <div class="hero__stats reveal" data-delay="4">
-      {stats.map((stat) => (
-        <div class="stat">
-          <div class="stat__value">
-            {stat.countTo
-              ? <><span class="counter" data-to={stat.countTo}>0</span>{stat.suffix}</>
-              : stat.value}
-          </div>
-          <p class="stat__label">{stat.label}</p>
+    <div class="hero__proof reveal" data-delay="4">
+      {/* aria-hidden with a plain-language summary beside it: read aloud, the
+          prompts and the JSON are noise, and the lede above already states what
+          the session shows. */}
+      <div class="term panel--dark" aria-hidden="true">
+        <div class="term__bar">
+          <span class="term__dot"></span>
+          <span class="term__dot"></span>
+          <span class="term__dot"></span>
+          <span class="term__path">~ / your-project</span>
         </div>
-      ))}
+        <pre class="term__body">{session.map((line) => (
+          <>
+            <span class="term__cmd"><span class="term__prompt">$</span> {line.cmd}</span>
+            {line.out.map((out) => <span class="term__out">{out}</span>)}
+          </>
+        ))}<span class="term__caret" aria-hidden="true"></span></pre>
+      </div>
+
+      <div class="hero__stats">
+        {stats.map((stat) => (
+          <div class="stat">
+            <div class="stat__value">{stat.value}</div>
+            <p class="stat__label">{stat.label}</p>
+          </div>
+        ))}
+      </div>
     </div>
   </div>
 </section>

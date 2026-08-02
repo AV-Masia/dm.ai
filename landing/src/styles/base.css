@@ -105,9 +105,16 @@ h3 { font-weight: 300; }
   letter-spacing: -0.035em;
 }
 
+/* At 3.9rem in a 5fr column the section headlines set in three and four lines —
+   270px of type before the section had said anything, seven times down the
+   page, and the break landed wherever the column ran out rather than where the
+   sentence wanted it. "One orchestration layer." put its whole gradient keyword
+   alone on a third line. A smaller headline in a wider column (see .split) sets
+   the same words in two, and balance keeps the last line from running short. */
 .headline {
-  font-size: clamp(2.1rem, 4.6vw, 3.9rem);
-  line-height: 1.03;
+  font-size: clamp(2rem, 3.9vw, 3.4rem);
+  line-height: 1.05;
+  text-wrap: balance;
 }
 
 .subhead {
@@ -134,6 +141,31 @@ h3 { font-weight: 300; }
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+
+/* One fixed weight rather than a step off the heading, because that is how the
+   pairing is set on epam.com: a hairline headline with the gradient phrase in
+   bold inside it — "Evolution of Open-Source **GenAI Enterprise** Platform".
+   The headings here run at 100 and 200, so 700 gives the same jump.
+
+   Beyond matching the mark, the weight is what makes the sweep legible: the
+   accent is a gradient clipped to the glyphs, so the stroke is the only place
+   the colour can appear. At Sora 100 there was not enough of it to carry three
+   stops, and the mint and violet ends washed out to a flat pale blue.
+
+   700 is already in the family requested in Layout.astro — no extra font file —
+   and the hero still sets in two lines with "AI factory" unbroken. */
+h1 .accent,
+h2 .accent { font-weight: 700; }
+
+/* Bold, the phrase is wide enough to break across lines on a phone, and the
+   gradient reads as two half-sweeps when it does — the hero split into "wants
+   an AI" / "factory". The break moves in front of the phrase instead.
+
+   This holds only while the accents stay short. Every one of them fits on its
+   own line down to a 320px viewport today; a longer phrase would run past the
+   edge, and body carries overflow-x: hidden, so it would be clipped rather than
+   scrollable. Measure before writing a longer one. */
+.accent { white-space: nowrap; }
 
 /* ===== layout ===== */
 /* Layout primitives
@@ -162,10 +194,23 @@ h3 { font-weight: 300; }
 
 .band--flush { border-top: none; }
 
-/* Editorial split: headline column + content column. */
+/* Every section carried the same eyebrow-headline-standfirst arrangement on the
+   same canvas, seven times running, and the page read as one undifferentiated
+   scroll. Overriding the tokens rather than the background alone is what keeps
+   the cards inside a tinted band visible — they measure from --surface, and a
+   band that moved only its own background would swallow them. */
+.band--tint {
+  --canvas: var(--tint-canvas);
+  --surface: var(--tint-surface);
+  background: var(--canvas);
+}
+
+/* Editorial split: headline column + content column. Even columns rather than
+   5/7 — the headline is the longer of the two strings in every section that
+   uses this, and the narrower track was what forced the four-line settings. */
 .split {
   display: grid;
-  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
   gap: clamp(2rem, 5vw, 5rem);
   align-items: start;
 }

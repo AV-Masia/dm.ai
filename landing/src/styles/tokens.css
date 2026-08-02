@@ -26,15 +26,28 @@
    -------------------------------------------------------------------------- */
 
 :root {
-  /* Snow — default */
+  /* Snow — default.
+
+     #FBFAFA and #060606 are not chosen here: they are the canvas and ink EPAM
+     serves on its own properties (anywhere.epam.com computes to exactly these),
+     so the pair is fixed. An earlier pass darkened the canvas to separate the
+     white cards from it and drifted off-brand for a problem the hairline should
+     solve — the cards get their edge from --hairline at 16%, not from the
+     ground moving. */
   --canvas:      #FBFAFA;
   --surface:     #FFFFFF;
-  --surface-alt: #F2F1F0;
+  --surface-alt: #EFEEEC;
   --text:        #060606;
   --muted:       rgba(6, 6, 6, 0.58);
   --faint:       rgba(6, 6, 6, 0.38);
-  --hairline:    rgba(6, 6, 6, 0.12);
-  --hairline-strong: rgba(6, 6, 6, 0.22);
+  --hairline:    rgba(6, 6, 6, 0.16);
+  --hairline-strong: rgba(6, 6, 6, 0.26);
+
+  /* The alternating band, one step off the canvas in either theme. A tinted
+     band restates --surface with it: the cards inside have to keep the same
+     step away from their ground, or they disappear into it. */
+  --tint-canvas:  #F0EFED;
+  --tint-surface: #FFFFFF;
 
   --sea:   #0088A0;
   --mint:  #00998F;
@@ -45,8 +58,23 @@
      eyebrows are 11px and the step numbers 11px on a fill, both of which need
      4.5:1; --sea measures 4.01:1 against the canvas, just under. Same hue and
      saturation, darker. Night's --sea is already 15:1 there and aliases back. */
-  --sea-ink: #00798F;
+  /* Re-tuned when the alternating band arrived. #00798F cleared 4.5:1 on the
+     #FBFAFA canvas with nothing to spare, and a tinted band puts the same 11px
+     eyebrow on #F0EFED, where it measured 4.42:1. This clears both — 5.6:1 on
+     the canvas, 5.0:1 in a band — and it is still the fill the step numbers sit
+     on, where Snow's canvas reads 5.8:1 on top of it. */
+  --sea-ink: #00707F;
 
+  /* Built from the four accent tokens rather than written out, which is what
+     lets the two always-dark scopes (.panel--dark and .footer) restate those
+     tokens and get the Night sweep on a light page for free.
+
+     The stops are epam.com's, read off the homepage headline: it paints
+     `linear-gradient(to left, #B896FF 31px, #00F6FF 86.8px, #00FFF0 100%)` —
+     mint into cyan into lilac, left to right, with no blue between them. Their
+     product sites do route through blue (#1EA1E4 on solutionshub, #0047FF on
+     anywhere), but the headline treatment this page copies is the homepage one.
+     Do not "correct" the missing blue stop: it is absent on purpose. */
   --grad: linear-gradient(96deg, var(--mint) 0%, var(--sea) 46%, var(--lilac) 100%);
 
   /* The filled button needs its own stops on Snow. The accents above are tuned
@@ -80,7 +108,11 @@
 
   --shell: 1180px;
   --gutter: clamp(1.25rem, 5vw, 4rem);
-  --band: clamp(5rem, 11vw, 9.5rem);
+  /* 152px top and bottom put 304px of empty canvas on every section boundary,
+     and the page ran to thirteen screens on a 900px viewport with roughly half
+     of them blank. The band is the page's only vertical rhythm, so it sets the
+     density on its own — nothing else needed changing to halve the scroll. */
+  --band: clamp(3.5rem, 7vw, 6.5rem);
 
   /* Soft cards, fully round controls. The 4px this used to carry read as a
      sharp editorial page; the panels are objects sitting on the canvas here,
@@ -115,6 +147,9 @@
   --hairline:    #2A2A2A;
   --hairline-strong: #3A3A3A;
 
+  --tint-canvas:  #101010;
+  --tint-surface: #1E1E1E;
+
   --sea:   #00F6FF;
   --mint:  #00FFF0;
   --lilac: #B896FF;
@@ -142,9 +177,9 @@
   color-scheme: dark;
 }
 
-/* The code panel is the one place that stays dark in both themes: the token
-   colours below are tuned for a dark ground, and a terminal surface reads as
-   deliberate on a light page. */
+/* The code and terminal panels are the one place that stays dark in both
+   themes: the token colours below are tuned for a dark ground, and a terminal
+   surface reads as deliberate on a light page. */
 .panel--dark {
   --surface:     #161616;
   --surface-alt: #1C1C1C;
@@ -159,7 +194,8 @@
   --sky:   #7BA8FF;
   --sea-ink: var(--sea);
   /* Carried with the accents it belongs to: this scope restates the Night
-     gradient, so it has to restate the ink that goes on top of it. */
+     accents, so --grad rebuilds from them here and the ink on top has to be
+     restated with it. */
   --btn-ink: #04211F;
   --grad-btn: var(--grad);
   color: var(--text);

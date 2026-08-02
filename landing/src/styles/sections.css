@@ -75,7 +75,7 @@
   color: var(--text);
   position: relative;
   padding: 0.35rem 0;
-  transition: opacity 0.2s var(--ease);
+  transition: color 0.2s var(--ease), opacity 0.2s var(--ease);
   opacity: 0.72;
 }
 
@@ -87,11 +87,16 @@
   background: var(--text);
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.3s var(--ease);
+  transition: transform 0.3s var(--ease), background-color 0.2s var(--ease);
 }
 
-.nav__link:hover { opacity: 1; }
-.nav__link:hover::after { transform: scaleX(1); }
+/* --sea-ink rather than --sea: these are 15px, so they need 4.5:1, and Snow's
+   --sea measures 4.01:1 against the canvas. --sea-ink is that hue pulled dark
+   enough to clear it (5.6:1), and on Night it aliases straight back to the
+   bright --sea. The rule under the link takes the accent with the label —
+   turquoise text over a text-coloured underline reads as two separate marks. */
+.nav__link:hover { opacity: 1; color: var(--sea-ink); }
+.nav__link:hover::after { transform: scaleX(1); background: var(--sea-ink); }
 
 /* Scroll spy. The reader always knows which section they are standing in, so
    the underline is the same mark hover uses — one vocabulary, two triggers. */
@@ -106,9 +111,14 @@
    backgrounds in one box — a flat one clipped to the padding box, the brand
    gradient clipped to the border box — leave the border showing as gradient,
    which border-color cannot do on its own. */
+/* 2px, not 1: the gradient is the whole of this control — there is no fill
+   behind it — and at a single pixel the three stops had too little width to
+   separate, so the edge read as one flat cyan line at arm's length. Two is
+   where the mint and lilac ends become distinguishable. Three turns the edge
+   into a band and the pill starts to look chunky. */
 .nav__cta {
   border-radius: 999px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   color: var(--text);
   font-weight: 700;
   letter-spacing: 0.02em;
@@ -322,12 +332,22 @@
   margin-bottom: 3.5rem;
 }
 
-.hero__stats {
+/* The proof row: the session panel and the two figures that belong to it. The
+   headline keeps the full display size above it — the panel sits under the
+   fold line rather than beside the title, so nothing had to be shrunk to make
+   room for the product. */
+.hero__proof {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+  gap: clamp(1.5rem, 3.5vw, 3rem);
+  align-items: start;
   padding-top: 2.5rem;
   border-top: 1px solid var(--hairline);
+}
+
+.hero__stats {
+  display: grid;
+  gap: 2.25rem;
 }
 
 .stat__value {
@@ -344,16 +364,88 @@
   line-height: 1.45;
 }
 
-@media (max-width: 960px) {
-  .hero__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2rem 1.5rem; }
+/* --------------------------------------------------------------------------
+   7a. Terminal panel
+   -------------------------------------------------------------------------- */
+
+/* Dark in both themes, like the code section: the token colours below are tuned
+   for a dark ground, and a terminal that stayed light on Snow would read as a
+   quotation rather than as a shell. .panel--dark carries the scope. */
+.term {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.term__bar {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid var(--hairline);
+  background: var(--surface-alt);
+}
+
+.term__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: var(--radius-pill);
+  background: var(--hairline-strong);
+}
+
+/* --muted, not --faint: --faint measures 3.19:1 on the panel's title bar, and
+   this is 12px. */
+.term__path {
+  margin-left: 0.6rem;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+/* Each command and each output line is its own block, so the panel needs no
+   hand-placed newlines and the lines can be coloured apart. */
+.term__body {
+  display: flex;
+  flex-direction: column;
+  padding: 1.15rem 1.25rem 1.35rem;
+  font-size: 0.8125rem;
+  line-height: 1.75;
+  overflow-x: auto;
+}
+
+.term__cmd { color: var(--text); white-space: pre; }
+.term__cmd:not(:first-child) { margin-top: 0.9rem; }
+.term__prompt { color: var(--sea); margin-right: 0.5rem; }
+.term__out { color: var(--muted); white-space: pre; }
+
+.term__caret {
+  width: 0.5rem;
+  height: 1.05em;
+  margin-top: 0.5rem;
+  background: var(--sea);
+}
+
+@media (max-width: 1080px) {
+  /* Below the two-column split the figures lie back down beside each other
+     rather than stacking into a tall column under a full-width panel. */
+  .hero__proof { grid-template-columns: 1fr; gap: 2rem; }
+  .hero__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
 }
 
 @media (max-width: 720px) {
   .hero__title { max-width: none; }
+  .term__body { font-size: 0.75rem; }
+}
+
+/* The rule between each badge wraps with it, and on a narrow screen that left a
+   dash hanging at the end of the first line. */
+@media (max-width: 560px) {
+  .hero__meta { gap: 0.4rem 1rem; }
+  .hero__meta span:not(:last-child)::after { display: none; }
 }
 
 @media (max-width: 480px) {
-  .hero__stats { grid-template-columns: 1fr 1fr; }
   .hero__actions { flex-direction: column; align-items: stretch; }
 }
 
@@ -366,17 +458,24 @@
    8. Video
    -------------------------------------------------------------------------- */
 
+/* Narrower than the shell. The poster is a mid-film frame whose right third is
+   empty canvas, and at the full 1050px that emptiness was the largest single
+   area on the page — the section spent a whole screen presenting one play
+   button. Centred at 54rem the frame reads as a film still rather than as a
+   panel that failed to load. */
 .video__frame {
   position: relative;
   aspect-ratio: 16 / 9;
   width: 100%;
+  max-width: 54rem;
+  margin: 0 auto;
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
   overflow: hidden;
-  background:
-    radial-gradient(60% 80% at 22% 18%, var(--glow-a), transparent 70%),
-    radial-gradient(50% 70% at 82% 88%, var(--glow-b), transparent 70%),
-    var(--surface);
+  /* Flat. Two radial blooms used to sit here and never showed: the poster is
+     object-fit: cover across the whole frame, so it painted over both of them.
+     They cost two gradient rasters per repaint to be invisible. */
+  background: var(--surface);
 }
 
 /* The film's cover frame, held locally so nothing is requested from the video
@@ -435,7 +534,8 @@
 .video__play svg { margin-left: 4px; }
 
 .video__note {
-  margin-top: 1.25rem;
+  max-width: 54rem;
+  margin: 1.25rem auto 0;
   font-size: 0.875rem;
   color: var(--muted);
 }
@@ -792,12 +892,16 @@
 
 /* Recessive by design: solid hairlines one shade off the surface, never
    dashed — a dashed rule reads as a threshold when it is only a grid. */
+/* Inset from the first and last row's outer edge: run to the full height of the
+   plot the lines close the rows into a boxed table, and at ten rows that box
+   was reading as a rendering artefact rather than as a scale. */
 .bars__grid {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: 0.4rem;
+  bottom: 0.4rem;
   left: calc(var(--bar-name) + var(--bar-gap));
   right: calc(var(--bar-value) + var(--bar-gap));
+  opacity: 0.65;
   pointer-events: none;
 }
 
@@ -908,9 +1012,7 @@
   --flow-indent: 1.95rem;
   margin-top: 3.5rem;
   display: grid;
-  grid-template-columns: 1fr auto;
   gap: 1.5rem;
-  align-items: stretch;
 }
 
 /* align-content: start is load-bearing. The run stretches to the height of the
@@ -1039,23 +1141,20 @@
 /* Stretches beside the run so it reads as spanning steps 1 to 7. The lilac
    edge marks it as the one thing outside the automation. */
 .flow__aside {
-  display: grid;
-  place-content: center;
-  padding: 1.25rem 1rem;
+  padding: 1.15rem 1.35rem;
   border: 1px solid var(--hairline);
   border-left: 2px solid var(--lilac);
   border-radius: var(--radius);
   background: var(--surface);
 }
 
-/* Set along the panel rather than across it — the label belongs to the whole
-   run, and turned it reads as an edge marking the run rather than a note after
-   it. Ordinary block flow, never a flex or grid item: as one, the <strong>
-   shrinks and the words stack one per line. */
+/* Along the panel it was a 470px column of rotated 13px type beside the run —
+   the one line on the page a reader has to tilt their head for, carrying the
+   one fact that says a human approves the work. It reads across, under the run
+   it gates. Ordinary block flow, never a flex or grid item: as one, the
+   <strong> shrinks and the words stack one per line. */
 .flow__human {
-  writing-mode: vertical-rl;
-  text-align: center;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   color: var(--muted);
   line-height: 1.7;
 }
@@ -1070,17 +1169,6 @@
   border-radius: var(--radius-pill);
   background: var(--lilac);
   vertical-align: middle;
-}
-
-@media (max-width: 900px) {
-  .flow {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-  }
-
-  /* Stacked, the panel is wide and short again, so the text lies back down. */
-  .flow__aside { padding: 1.25rem; }
-  .flow__human { writing-mode: horizontal-tb; }
 }
 
 @media (min-width: 900px) {
@@ -1231,10 +1319,12 @@
 }
 .path:focus-within .textlink { border-color: var(--text); }
 
+/* --faint is decoration contrast — 3.4:1 on Night and under 3:1 on Snow — and
+   these are the labels that number the four adoption paths. */
 .path__index {
   font-family: var(--mono);
   font-size: 0.75rem;
-  color: var(--faint);
+  color: var(--muted);
   transition: color 0.25s var(--ease);
 }
 
@@ -1253,28 +1343,6 @@
 
 @media (max-width: 1080px) {
   .paths { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 900px) {
-  .flow {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-  }
-
-  /* Stacked, the panel is wide and short again, so the text lies back down. */
-  .flow__aside { padding: 1.25rem; }
-  .flow__human { writing-mode: horizontal-tb; }
-}
-
-@media (min-width: 900px) {
-  .flow__body {
-    display: grid;
-    grid-template-columns: 11rem 1fr;
-    gap: 1.5rem;
-    align-items: baseline;
-  }
-
-  .flow__desc { margin-top: 0; }
 }
 
 @media (max-width: 560px) {
@@ -1495,12 +1563,15 @@
 
 .close { position: relative; overflow: hidden; }
 
+/* A radial stop rather than a blurred circle. filter: blur(130px) on a 640px
+   box makes the compositor rasterise and blur that surface again on every frame
+   it scrolls through; a radial-gradient paints the identical falloff once, as
+   part of the background. Same bloom, none of the per-frame cost — and it is
+   the same technique the hero blooms already use. */
 .close__glow {
   position: absolute;
   width: 40rem; height: 40rem;
-  border-radius: 50%;
-  filter: blur(130px);
-  background: var(--glow-a);
+  background: radial-gradient(closest-side, var(--glow-a), transparent);
   bottom: -24rem;
   left: 50%;
   transform: translateX(-50%);

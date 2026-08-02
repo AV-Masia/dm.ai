@@ -38,6 +38,11 @@ const allSystems = [...deliverySystems.shown, ...deliverySystems.also].join(' ·
         <stop offset="0" stop-color="var(--sea)" stop-opacity="0.30"></stop>
         <stop offset="1" stop-color="var(--sea)" stop-opacity="0"></stop>
       </radialGradient>
+      {/* Hard-coded rather than var(--grad): SVG cannot read a CSS gradient,
+           only a colour. The three stops mirror Night's --grad in tokens.css
+           and have to be changed with it — the hub is the largest painted
+           instance of the brand sweep on the page, so a stale copy here reads
+           as two different gradients rather than one. */}
       <linearGradient id="bridgeHubFill" x1="0" y1="0" x2="1" y2="0.35">
         <stop offset="0" stop-color="#00FFF0"></stop>
         <stop offset="0.45" stop-color="#00F6FF"></stop>
