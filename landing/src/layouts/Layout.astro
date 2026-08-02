@@ -1,12 +1,13 @@
 ---
 // Cascade order is load-bearing and these imports set it. a11y.css must stay
-// last: it overrides .reveal, .bar__fill and .flow__step::after at equal
+// last: it overrides .reveal, .bar__fill and .flow__arrow::after at equal
 // specificity and only wins by coming after the section rules.
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/sections.css';
 import '../styles/a11y.css';
 
+import Analytics from '../components/Analytics.astro';
 import {
   meta, film, filmEmbedUrl, filmWatchUrl, software, faq, asset, basePath, REPO,
   organization, installTabs, verifyCommand, lastModified,
@@ -15,12 +16,6 @@ import {
 const canonical = new URL(basePath, Astro.site).href;
 const absolute = (path: string) => new URL(asset(path), Astro.site).href;
 const ogImage = absolute(meta.ogImage);
-
-// Read through process.env, not import.meta.env: an unknown import.meta.env key
-// breaks Vite's dev-mode SSR transform ("Cannot split a chunk that has already
-// been edited"). Unset, the block is never rendered and the page ships no
-// tracking. A GA4 id is public once served, so it is a variable, not a secret.
-const gaId = process.env.GA_MEASUREMENT_ID;
 
 /**
  * One @graph, not separate blocks: the nodes carry an @id and reference each
@@ -201,18 +196,7 @@ const schemas = [{ '@context': 'https://schema.org', '@graph': graph }];
     })();
   </script>
 
-  {gaId && (
-    <>
-      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
-      {/* Written out rather than passed through define:vars, which would wrap
-          the body in a function and leave gtag local — the snippet declares it
-          globally, and a later gtag('event', …) needs it. */}
-      <script is:inline set:html={`window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', ${JSON.stringify(gaId)});`} />
-    </>
-  )}
+  <Analytics />
 
   {schemas.map((schema) => (
     <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />

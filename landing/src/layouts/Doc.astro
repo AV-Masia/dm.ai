@@ -5,6 +5,7 @@ import '../styles/sections.css';
 import '../styles/docs.css';
 import '../styles/a11y.css';
 
+import Analytics from '../components/Analytics.astro';
 import Brand from '../components/Brand.astro';
 import { meta, basePath, REPO, DOCS, organization, lastModified } from '../data/content';
 import { buildNav, hrefOf, ROOT_ID } from '../lib/docs';
@@ -105,6 +106,8 @@ const schema = {
       } catch (e) { /* private mode keeps the default */ }
     })();
   </script>
+
+  <Analytics />
 
   <script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
 </head>

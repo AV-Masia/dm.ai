@@ -1,9 +1,13 @@
 # DMTools landing page
 
-One static page, built with [Astro](https://astro.build). Components and data
-are TypeScript; the output is plain HTML and CSS with about 2 KB of JavaScript
-for the theme switch, the menu, the tabs and the copy buttons. No framework
-runtime ships to the browser.
+The landing page and the reference documentation, built with
+[Astro](https://astro.build). Components and data are TypeScript; the output is
+plain HTML and CSS with about 2 KB of JavaScript for the theme switch, the menu,
+the tabs and the copy buttons. No framework runtime ships to the browser.
+
+The landing is a single page. The reference pages are generated from
+`dmtools-ai-docs/`, the sibling directory contributors already edit, so a build
+reports many more pages than there are files here.
 
 ## Layout
 
@@ -11,29 +15,42 @@ runtime ships to the browser.
 landing/
 ├── astro.config.mjs            site and base come from $SITE_URL
 ├── src/
+│   ├── content.config.ts       the docs collection, loaded from ../dmtools-ai-docs
 │   ├── pages/
-│   │   ├── index.astro         the page: a Layout and thirteen sections
+│   │   ├── index.astro         the landing: a Layout and thirteen sections
+│   │   ├── docs/
+│   │   │   ├── index.astro     the reference index
+│   │   │   └── [...slug].astro one page per Markdown file in the collection
+│   │   ├── pricing.md.ts       generated, the pricing an assistant can read
 │   │   ├── robots.txt.ts       generated, so the address stays in one place
 │   │   └── sitemap.xml.ts      likewise
-│   ├── layouts/Layout.astro    head, meta, structured data, the theme script
+│   ├── layouts/
+│   │   ├── Layout.astro        head, meta, structured data, the theme script
+│   │   └── Doc.astro           the same, for a reference page
 │   ├── sections/*.astro        one file per section; edit these
 │   ├── components/             the markup that stood in more than one place
 │   │   ├── SectionHead.astro   eyebrow + headline + standfirst (used 7×)
 │   │   ├── CopyButton.astro    button, icon and the clipboard script (5×)
 │   │   ├── Brand.astro         the wordmark (2×)
 │   │   ├── PlayIcon.astro      (2×)
-│   │   └── BridgeDiagram.astro the layer diagram, laid out from data
+│   │   ├── BridgeDiagram.astro the layer diagram, laid out from data
+│   │   └── Analytics.astro     the gtag block; both layouts render it
 │   ├── data/content.ts         everything the page states, stated once
+│   ├── lib/
+│   │   ├── docs.ts             ids, titles and the reference navigation tree
+│   │   └── remark-doc-links.mjs rewrites Markdown links to resolve as HTML
 │   ├── scripts/shared.ts       motion preference and the status strip
-│   └── styles/                 imported by Layout.astro, in this order
+│   └── styles/                 imported by the layouts, in this order
 │       ├── tokens.css          palette, both themes, scoped overrides
 │       ├── base.css            reset, type scale, shell and band, buttons
 │       ├── sections.css        one banner-commented block per section
+│       ├── docs.css            the reference pages; Doc.astro only
 │       └── a11y.css            motion and print preferences; must stay last
 └── public/
     ├── llms.txt                extractable summary for AI assistants
     └── assets/
-        ├── favicon.svg
+        ├── favicon.svg         the DMT mark
+        ├── dmt-mark.png        the same mark rasterised, for the structured data
         ├── film-poster.jpg     the frame YouTube uses, served locally
         └── og-cover.png        social card, 1200×630
 ```
@@ -135,6 +152,13 @@ Set `GA_MEASUREMENT_ID` at build time and the gtag block is rendered; leave it u
 and it is never emitted, so the page ships with no tracking. A GA4 measurement
 ID is public the moment the page is served, so it belongs in a repository
 variable rather than a secret.
+
+It is a **repository** variable, not an environment one. The value is read by
+the `build` job, which declares no environment, so a variable scoped to
+`github-pages` would never reach it.
+
+`components/Analytics.astro` owns the block and both layouts render it. Keeping
+it in Layout.astro alone is what left every reference page uncounted.
 
 ## Deploying
 
