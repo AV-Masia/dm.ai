@@ -239,9 +239,13 @@
    7. Hero
    -------------------------------------------------------------------------- */
 
+/* Bottom-heavy, like every epam.com section: 72px above the first line and 137px
+   below the last, rather than the top-heavy 120/80 this carried. The hero is the
+   one section whose top padding also has to clear the sticky nav, so the top
+   value stays a step above --band-top. */
 .hero {
   position: relative;
-  padding: clamp(4rem, 9vw, 7.5rem) 0 clamp(3rem, 6vw, 5rem);
+  padding: clamp(4.5rem, 9vw, 6.5rem) 0 clamp(4.5rem, 9vw, 8.5rem);
   overflow: hidden;
   background: var(--canvas);
 }
@@ -298,13 +302,13 @@
   align-items: center;
   gap: 0.75rem 1.25rem;
   font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  font-weight: 900;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   /* --faint is 2.7:1 on the Snow canvas and 3.0:1 on Night — decoration
      contrast, and this line carries the licence and the runtime requirement. */
   color: var(--muted);
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 .hero__meta span { display: inline-flex; align-items: center; gap: 1.25rem; }
 .hero__meta span:not(:last-child)::after {
@@ -320,7 +324,10 @@
    lost: the first line is 1033px and .shell already caps the column at 1052px. */
 .hero__title { margin-bottom: 2rem; }
 
-.hero__lede { margin-bottom: 2.75rem; }
+/* 20px, their --slider-cta-after-text. The heading above keeps their 32px, so the
+   lede reads as belonging to the button under it rather than floating between
+   the two. */
+.hero__lede { margin-bottom: 1.25rem; }
 
 .hero__actions {
   display: flex;
@@ -347,8 +354,8 @@
 .stat__value {
   font-size: clamp(1.9rem, 3.6vw, 3rem);
   font-weight: 200;
-  line-height: 1;
-  letter-spacing: -0.03em;
+  line-height: 1.1;
+  letter-spacing: normal;
 }
 
 .stat__label {
@@ -789,8 +796,8 @@
 
 .bridge__group {
   font-size: 0.6875rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
+  font-weight: 900;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
   padding-bottom: 0.75rem;
@@ -852,11 +859,16 @@
 /* The counted figures carry the gradient. They are the page's only claim that
    is a number rather than a sentence, and the gradient is what marks them as
    the measured ones — see the brand note in tokens.css. */
+/* epam.com's scroll-infographic figure, scaled to a card: weight 100, natural
+   tracking, line-height 1.2. Theirs runs at 150px because it sits alone in a
+   full-width band; three of these share a row, so the ceiling stops at 76px. The
+   weight and the loose leading are what carry the look, not the size — a hairline
+   number set tight reads as a cramped headline instead of a measured figure. */
 .figure__value {
-  font-size: clamp(2.5rem, 5.5vw, 4rem);
-  font-weight: 200;
-  line-height: 0.9;
-  letter-spacing: -0.045em;
+  font-size: clamp(2.5rem, 5.5vw, 4.75rem);
+  font-weight: 100;
+  line-height: 1.2;
+  letter-spacing: normal;
   background: var(--grad);
   -webkit-background-clip: text;
   background-clip: text;
@@ -890,8 +902,8 @@
 
 .bars__caption {
   font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  font-weight: 900;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -1454,8 +1466,8 @@
 .install__nextTitle {
   margin-bottom: 1.25rem;
   font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
+  font-weight: 900;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--muted);
 }
@@ -1522,12 +1534,19 @@
 
 .faq__item[open] .faq__sum::after { transform: rotate(45deg); }
 
+/* Wider than the 64ch this carried, which rendered ~490px in a 1052px row and
+   read as a half-width column with nothing to its right. 72ch lands at ~686px,
+   two thirds of the row, and the size comes up with it — a wider measure at the
+   old 15px would have run past 90 characters a line, which is where you start
+   losing your place on the way back to the left edge. 17px also sits nearer
+   epam's 18px paragraph than 15px did. Measured, not guessed: 80ch put the worst
+   line at 95 characters, so the cap is the constraint here, not the copy. */
 .faq__a {
   padding-bottom: 1.5rem;
-  font-size: 0.9375rem;
+  font-size: 1.0625rem;
   color: var(--muted);
   line-height: 1.7;
-  max-width: 64ch;
+  max-width: 72ch;
 }
 
 /* <details> cannot transition its own height across browsers, so the answer
@@ -1582,6 +1601,16 @@
 }
 
 .close__inner { position: relative; z-index: 1; }
+
+/* Holds the break at "Build your AI factory / with us." em, not ch: ch measures
+   the active font's zero, so the 14ch this used to carry meant 784px under Sora
+   and 794px under Hanken Grotesk — under the 898px the first line needs, which
+   is what split it across three. Measured at the 100px ceiling: the first line
+   wants 8.98em and "with" joins it at 10.33em, so 9.6em is the midpoint and
+   scales with font-size rather than with the glyph, which is what makes it hold
+   at every viewport down to where .display stops shrinking. Re-measure if the
+   string or the family changes — see the same note on .hero__title. */
+.close .display { max-width: 9.6em; }
 
 .close__actions {
   display: flex;
@@ -1661,13 +1690,13 @@
   max-width: 34ch;
 }
 
-/* Accent, uppercase, and tracked much wider than the page's other eyebrows —
-   the widest setting on epam.com and the thing that makes a footer read as
-   theirs. */
+/* Their footer column headings are the same 16px/900/0.5em preheader the sections
+   carry — on epam.com it is one treatment used in both places, not a quieter
+   variant for small print. Matched to .eyebrow, accent and all. */
 .footer__title {
-  font-size: 0.6875rem;
-  font-weight: 800;
-  letter-spacing: 0.26em;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--sea);
   margin-bottom: 1.5rem;

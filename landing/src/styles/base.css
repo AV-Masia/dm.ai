@@ -20,12 +20,18 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* epam.com's body setting: 18px at weight 300, line-height 1.5, tracked 0.04em
+   (they compute to 18px/27px/0.72px). The tracking is the part that reads as
+   theirs — a light weight set loose is what keeps a dark page from looking
+   dense. 1.7 was airier than anything they serve. */
 body {
   background: var(--canvas);
   color: var(--text);
   font-family: var(--font);
+  font-size: 1.125rem;
   font-weight: 300;
-  line-height: 1.7;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -35,7 +41,9 @@ body {
 img, svg { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
-code, pre { font-family: var(--mono); }
+/* letter-spacing: normal undoes body's 0.04em. Tracking a monospace face widens
+   an already-wide grid, and the terminal panels set it at 13px. */
+code, pre { font-family: var(--mono); letter-spacing: normal; }
 
 ::selection { background: var(--text); color: var(--canvas); }
 
@@ -66,17 +74,21 @@ code, pre { font-family: var(--mono); }
    4. Typography
    -------------------------------------------------------------------------- */
 
-/* 11px, wide-tracked and uppercase — the least legible setting on the page, and
-   it labels every section. --faint measures 2.7:1 on Snow and 3.0:1 on Night,
-   so this one rule was failing AA nine times over. */
+/* epam.com's preheader, verbatim: 16px, weight 900, uppercase, tracked 0.5em —
+   8px of letter-spacing, the widest setting they serve and the one thing that
+   labels a section as theirs. 16px is also the fix to what this rule used to be:
+   at 11px on --faint it measured 2.7:1 on Snow and failed AA nine times over.
+   --sea-ink holds 5.6:1 on the canvas and 5.0:1 in a tinted band; 16px/900 still
+   counts as normal text for AA (bold clears at 18.66px), so the token is doing
+   the work, not the size. margin-bottom is their 32px heading gap. */
 .eyebrow {
   display: block;
-  font-size: 0.6875rem;
-  font-weight: 800;
-  letter-spacing: 0.18em;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: 0.5em;
   text-transform: uppercase;
   color: var(--sea-ink);
-  margin-bottom: 1.75rem;
+  margin-bottom: 2rem;
 }
 
 .eyebrow--rule {
@@ -91,18 +103,24 @@ code, pre { font-family: var(--mono); }
   background: var(--hairline);
 }
 
-/* Sora at 100 is the page's signature setting, and it only works large: the
-   display and the section headlines carry it, h3 stays at 300 because card
-   titles run at 16–20px where a hairline weight stops being readable. */
-h1, h2, h3 { letter-spacing: -0.028em; line-height: 1.02; }
-h1 { font-weight: 100; }
-h2 { font-weight: 200; }
-h3 { font-weight: 300; }
+/* epam.com sets its hero light rather than hairline — museo-sans 300 at ~62px —
+   and saves weight 100 for the counted figures, which is the one place a
+   hairline reads as deliberate rather than as a font that failed to load. These
+   are a step up from the 100/200/300 this carried, and one step under epam's own
+   numbers because Hanken Grotesk is the lighter face of the two at equal weight.
+
+   Tracking follows them too: their headlines run at roughly their natural width,
+   and the -0.028em here was pulling words together tightly enough to read as a
+   different typographic register. */
+h1, h2, h3 { letter-spacing: -0.01em; line-height: 1.05; }
+h1 { font-weight: 200; }
+h2 { font-weight: 300; }
+h3 { font-weight: 400; }
 
 .display {
   font-size: clamp(2.85rem, 7.4vw, 6.25rem);
-  line-height: 0.98;
-  letter-spacing: -0.035em;
+  line-height: 1.02;
+  letter-spacing: -0.012em;
 }
 
 /* Smaller than it was, in a wider column (see .split): at 3.9rem in a 5fr track
@@ -118,7 +136,7 @@ h3 { font-weight: 300; }
   font-size: clamp(1rem, 1.35vw, 1.2rem);
   font-weight: 300;
   color: var(--muted);
-  line-height: 1.75;
+  line-height: 1.55;
   max-width: 60ch;
 }
 
@@ -126,7 +144,7 @@ h3 { font-weight: 300; }
   font-size: clamp(1.1rem, 1.7vw, 1.45rem);
   font-weight: 300;
   color: var(--muted);
-  line-height: 1.6;
+  line-height: 1.5;
   max-width: 54ch;
 }
 
@@ -139,14 +157,14 @@ h3 { font-weight: 300; }
   color: transparent;
 }
 
-/* epam.com sets the pairing this way — a hairline headline with the gradient
-   phrase bold inside it — and the weight is also what makes the sweep legible:
-   the gradient is clipped to the glyphs, and Sora 100 gives it too little
-   stroke to carry three stops. 650 rather than the 700 they declare, because
-   Sora is the heavier face; available only because Layout.astro asks for the
-   weight axis. */
+/* epam.com sets the pairing this way — a light headline with the gradient phrase
+   bold inside it — and the weight is also what makes the sweep legible: the
+   gradient is clipped to the glyphs, and a 200 gives it too little stroke to
+   carry three stops. 700 is their own declared weight, and Hanken Grotesk is
+   light enough at it that no correction is needed; Sora took 650 because it ran
+   heavier. Available only because Layout.astro asks for the weight axis. */
 h1 .accent,
-h2 .accent { font-weight: 650; }
+h2 .accent { font-weight: 700; }
 
 /* Bold, the phrase breaks across lines on a phone and the gradient reads as two
    half-sweeps. Holds only while the accents stay short — every one fits its own
@@ -172,7 +190,7 @@ h2 .accent { font-weight: 650; }
 
 .band {
   position: relative;
-  padding: var(--band) 0;
+  padding: var(--band-top) 0 var(--band-bottom);
   border-top: 1px solid var(--hairline);
   background: var(--canvas);
   color: var(--text);

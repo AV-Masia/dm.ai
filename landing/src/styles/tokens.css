@@ -86,12 +86,15 @@
   --node-sys-line:  #0088A0;
   --node-sys-text:  #035666;
 
-  /* Sora carries the geometric, wide-aperture look the dark canvas needs, and
-     it holds up at the 100–200 weights the headlines are set in — Nunito Sans
-     thins out to a hairline well before that. JetBrains Mono replaces Fira Code
-     for the same reason at small sizes: a taller x-height stays legible at 13px
-     inside the terminal panels. */
-  --font: 'Sora', -apple-system, 'Segoe UI', system-ui, sans-serif;
+  /* Stands in for museo-sans, which is what epam.com serves and which licenses
+     only through Adobe Fonts — it cannot be self-hosted here. Hanken Grotesk is
+     the closest free face by proportion: the same width and x-height, so a
+     headline sets in the same number of lines, and it carries the full 100–900
+     axis the epam settings need. Sora was wider and ran headlines a line long;
+     Nunito Sans matches the shapes but thins to a hairline at 100–200, which is
+     exactly where the display sizes sit. JetBrains Mono stays for the terminal
+     panels: a taller x-height keeps 13px legible. */
+  --font: 'Hanken Grotesk', -apple-system, 'Segoe UI', system-ui, sans-serif;
   --mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, Menlo, monospace;
 
   --shell: 1180px;
@@ -99,8 +102,16 @@
   /* 152px top and bottom put 304px of empty canvas on every section boundary,
      and the page ran to thirteen screens on a 900px viewport with roughly half
      of them blank. The band is the page's only vertical rhythm, so it sets the
-     density on its own — nothing else needed changing to halve the scroll. */
-  --band: clamp(3.5rem, 7vw, 6.5rem);
+     density on its own — nothing else needed changing to halve the scroll.
+
+     Asymmetric, in epam.com's proportion: they run 72px above a section and
+     137px below it (--slider-padding-top 7.2rem, --padding-container-bottom
+     13.7rem on a 10px root), so a heading sits nearer the rule above it than
+     the next section does. The two values still sum to the 208px boundary the
+     symmetric 6.5rem produced, which is the point — the rhythm is theirs and
+     the page is not one pixel longer. */
+  --band-top: clamp(2.5rem, 5vw, 4.5rem);
+  --band-bottom: clamp(4.5rem, 9vw, 8.5rem);
 
   /* Soft cards, fully round controls. The 4px this used to carry read as a
      sharp editorial page; the panels are objects sitting on the canvas here,
